@@ -25,6 +25,6 @@ root@testenv-a986f4b6-workload-2:~/example_nginx_server# curl localhost
             "x-forwarded-for": "",
             "x-forwarded-proto": ""
         }
-        "status": "200"
+        "status": 200
     }
 ```
