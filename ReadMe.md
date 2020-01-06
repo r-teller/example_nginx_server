@@ -9,21 +9,22 @@ docker run -dit --net=host --name nginxWorkload rteller/example_nginx_server
 root@testenv-a986f4b6-workload-2:~/example_nginx_server# curl localhost
 {
         "instance": {
-            "hostname": "testenv-a986f4b6-workload-2.indigo.test",
+            "hostname": "ubuntu-112233",
             "serverAddress": "127.0.0.1",
         },
         "uri": {
+            "method": "GET",
             "scheme": "http",
-            "fullPath": "/",
-            "path": "/",
-            "queryString": ""
+            "fullPath": "/foo?a=b",
+            "path": "/foo",
+            "queryString": "a=b",
             "port": "80",
             "isHttps": false
         },
         "headers": {
             "host": "localhost",
-            "x-forwarded-for": "",
-            "x-forwarded-proto": ""
+            "x-forwarded-for": "192.168.10.10",
+            "x-forwarded-proto": "https"
         }
         "status": 200
     }
