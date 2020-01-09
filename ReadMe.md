@@ -8,36 +8,38 @@ docker run -dit --net=host --name nginxWorkload rteller/example_nginx_server:lat
 ```bash
 root@testenv-a986f4b6-workload-2:~/example_nginx_server# curl localhost
 {
-	"instance": {
-		"hostname": "testenv-abf22b09",
-		"serverAddress": "10.149.35.8",
-		"port": "80"
-	},
-	"uri": {
-		"httpVersion": "HTTP/1.1",
-		"method": "GET",
-		"scheme": "http",
-		"fullPath": "/browse/test?foo=bar",
-		"path": "/browse/test",
-		"queryString": "foo=bar",
-		"isHttps": false
-	},
-	"ssl": {
-		"sslProtocol": "",
-		"sslCipher": ""
-	},
-	"session": {
-		"httpConnection": "close",
-		"requestId": "b9c0832c8645987d1d7ec013b0d1dad0",
-		"connection": "8",
-		"connectionNumber": "1"
-	},
-	"headers": {
-		"host": "localhost",
-		"userAgent": "curl/7.58.0",
-		"xForwardedFor": "127.0.0.1",
-		"xForwardedProto": ""
-	},
-	"status": 200
-}
+        "hostname": "testenv-abf22b09-workload-1",
+        "network": {
+            "clientPort": "56798",
+            "clientAddress": "172.18.68.184",
+            "serverAddress": "10.149.35.8",
+            "serverPort": "443"
+        },
+        "uri": {
+            "httpVersion": "HTTP/1.1",
+            "method": "GET",
+            "scheme": "https",
+            "fullPath": "/browser/test?foo=bar",
+            "path": "/browser/test",
+            "queryString": "foo=bar",
+            "isHttps": true
+        },
+        "ssl": {
+            "sslProtocol": "TLSv1.2",
+            "sslCipher": "ECDHE-RSA-AES128-GCM-SHA256"
+        },
+        "session": {
+            "httpConnection": "keep-alive",
+            "requestId": "242297953919d02131d3dbc9e3aaa072",
+            "connection": "48",
+            "connectionNumber": "3"
+        },
+        "headers": {
+            "host": "10.149.35.8",
+            "userAgent": "Mozilla/5.0",
+            "xForwardedFor": "",
+            "xForwardedProto": ""
+        },
+        "status": 200
+    }
 ```
