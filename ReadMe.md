@@ -10,34 +10,33 @@ root@testenv-a986f4b6-workload-2:~/example_nginx_server# curl localhost
 {
 	"instance": {
 		"hostname": "testenv-abf22b09",
-		"serverAddress": "127.0.0.1",
-		"port": "443"
+		"serverAddress": "10.149.35.8",
+		"port": "80"
 	},
 	"uri": {
 		"httpVersion": "HTTP/1.1",
 		"method": "GET",
-		"scheme": "https",
-		"fullPath": "/",
-		"path": "/",
-		"queryString": "",
-		"isHttps": true
+		"scheme": "http",
+		"fullPath": "/browse/test?foo=bar",
+		"path": "/browse/test",
+		"queryString": "foo=bar",
+		"isHttps": false
 	},
 	"ssl": {
-		"sslProtocol": "TLSv1.2",
-		"sslCipher": "ECDHE-RSA-AES256-GCM-SHA384"
+		"sslProtocol": "",
+		"sslCipher": ""
 	},
 	"session": {
-		"requestId": "2195ba795b567d78f64ac595da75e12c",
-		"connection": "5",
+		"httpConnection": "close",
+		"requestId": "b9c0832c8645987d1d7ec013b0d1dad0",
+		"connection": "8",
 		"connectionNumber": "1"
 	},
 	"headers": {
 		"host": "localhost",
 		"userAgent": "curl/7.58.0",
-		"xForwardedFor": "",
-		"xForwardedProto": "",
-		"connection": ""
-
+		"xForwardedFor": "127.0.0.1",
+		"xForwardedProto": ""
 	},
 	"status": 200
 }
