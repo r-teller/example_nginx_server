@@ -11,3 +11,5 @@ COPY nginx/nginx.conf /etc/nginx/
 COPY nginx/ssl/* /etc/nginx/
 
 COPY test/run_docker_tests.sh /usr/local/bin
+
+EXPOSE 80 443
