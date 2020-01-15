@@ -1,4 +1,4 @@
 #!/bin/bash
 # updated chmod
-echo "Running test to check for nginx.conf"
+echo "Running test to verify nginx.conf syntax"
 nginx -t
