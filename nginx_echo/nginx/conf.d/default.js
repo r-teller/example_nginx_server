@@ -36,7 +36,7 @@ function echo(r) {
     // var req = { "client": r.variables.remote_addr, "port": Number(r.variables.server_port), "host": r.variables.host, "method": r.variables.request_method, "uri": r.variables.request_uri, "headers": headers, "body": r.variables.request_body }
     // var res = { "status": Number(_responseBody.response.statusCode), "timestamp": r.variables.time_iso8601 }
 ​
-    r.return(Number(_responseBody.response.statusCode, JSON.stringify(_responseBody) + '\n');
+    r.return(Number(_responseBody.response.statusCode, JSON.stringify(_responseBody) + '\n'));
 }
 
 // set $rspBody '{
