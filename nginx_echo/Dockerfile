@@ -6,8 +6,8 @@ RUN apt-get install curl wget vim nginx-module-njs -y
 
 RUN rm /etc/nginx/conf.d/default.conf
 RUN rm /etc/nginx/nginx.conf
-RUN ls;
-RUN pwd;
+RUN ls
+RUN pwd
 COPY nginx/conf.d/* /etc/nginx/conf.d/
 COPY nginx/nginx.conf /etc/nginx/
 COPY nginx/ssl/* /etc/nginx/
