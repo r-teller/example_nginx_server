@@ -1,0 +1,160 @@
+
+map $https $isHttps {
+    on          true;
+    default     false;
+}
+
+map $server_port $rspStatusBody {
+    "~^5[0-9]{3}$"  Unhealthy;
+    "~^6[0-9]{3}$"  Random;
+    default         Healthy;
+}
+
+split_clients "${request_id}" $rndHealth {
+    50.0%    Unhealthy;
+    50.0%    Healthy;
+}
+
+map $arg_status $rspQueryCode {
+    "~^2[0-9]{2}$"  200;
+    "~^3[0-9]{2}$"  300;
+    "~^4[0-9]{2}$"  400;
+    "~^5[0-9]{2}$"  500;
+}
+
+server {
+    listen 80;
+    listen 8000-8100;
+    default_type application/json;
+    mirror /_null;
+    location / {
+        js_content echo;
+    }
+    location /_null {
+        internal;
+        return 204;
+    }
+}
+
+server {
+    server_name _;
+    listen 80 default_server;
+    listen 5800-5899 default_server;
+    listen 6100-6199 default_server;
+    listen 8000-8999  default_server;
+
+    # SSL configuration
+    listen 443 ssl default_server;
+    listen 5400-5499 ssl default_server;
+    listen 6200-6299 ssl default_server;
+    listen 4000-4999 ssl default_server;
+
+    ssl_certificate /etc/nginx/default.crt;
+    ssl_certificate_key /etc/nginx/default.key;
+
+    ## This section populates the rspStatusCode
+    set $rspReason "Default response";
+    set $rspStatusCode 200;
+
+
+    ### If request came in on a port in the 5,000 range return unhealthy
+    if ($rspStatusBody = Unhealthy) {
+        set $rspStatusCode 500;
+        set $rspStatusBody Unhealthy;
+        set $rspReason "Incoming port was in 5,000 range";
+    }
+
+    ### If request came in on a port in the 6,000 range return random response
+    if ($rspStatusBody = Random) {
+        set $rndResponse  rnd$rndHealth;
+        set $rspReason "Incoming port was in 6,000 range";
+    }
+
+    if ($rndResponse = rndHealthy) {
+        set $rspStatusCode 200;
+        set $rspStatusBody Healthy;
+    }
+    if ($rndResponse = rndUnhealthy) {
+        set $rspStatusCode 500;
+        set $rspStatusBody Unhealthy;
+    }
+
+    if ($rspQueryCode = 200) {
+        set $rspStatusCode 200;
+        set $rspReason "Status code set by query param";
+        set $rspStatusBody Healthy;
+    }
+    if ($rspQueryCode = 300) {
+        set $rspStatusCode 300;
+        set $rspReason "Status code set by query param";
+        set $rspStatusBody Redirect;
+    }
+    if ($rspQueryCode = 400) {
+        set $rspStatusCode 400;
+        set $rspStatusBody "Auth Issues";
+        set $rspReason "Status code set by query param";
+    }
+    if ($rspQueryCode = 500) {
+        set $rspStatusCode 500;
+        set $rspStatusBody Unhealthy;
+        set $rspReason "Status code set by query param";
+    }
+
+
+set $rspBody '{
+    "hostname": "$hostname",
+    "network": {
+        "clientPort": "$remote_port",
+        "clientAddress": "$remote_addr",
+        "serverAddress": "$server_addr",
+        "serverPort": "$server_port"
+    },
+    "uri": {
+        "httpVersion": "$server_protocol",
+        "method": "$request_method",
+        "scheme": "$scheme",
+        "fullPath": "$request_uri",
+        "path": "$uri",
+        "queryString": "$args",
+        "isHttps": $isHttps
+    },
+    "ssl": {
+        "sslProtocol": "$ssl_protocol",
+        "sslCipher": "$ssl_cipher"
+    },
+    "session": {
+        "httpConnection": "$http_connection",
+        "requestId": "$request_id",
+        "connection": "$connection",
+        "connectionNumber": "$connection_requests"
+    },
+    "headers": {
+        "host": "$http_host",
+        "userAgent": "$http_user_agent",
+        "xForwardedFor": "$http_x_forwarded_for",
+        "xForwardedProto": "$http_x_forwarded_proto"
+    },
+    "statusCdoe": $rspStatusCode,
+    "statusBody": "$rspStatusBody",
+    "statusReason": "$rspReason"
+}\n';
+
+    add_header Content-Type application/json;
+
+    ## If Response Code was specified as a query param
+    ## Return appropriate response
+    if ($rspStatusCode = 200) {
+        return 200 $rspBody;
+    }
+    if ($rspStatusCode = 300) {
+        return 300 $rspBody;
+    }
+    if ($rspStatusCode = 400) {
+        return 400 $rspBody;
+    }
+    if ($rspStatusCode = 500) {
+        return 500 $rspBody;
+    }
+
+    return 200 $rspBody;
+}
