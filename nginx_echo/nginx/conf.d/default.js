@@ -65,19 +65,19 @@ function echo(r) {
             // Captures requests recieved on TCP port 6000-6999
             _responseBody.response.statusCode = r.args.status;
             switch (true) {
-                case (r.args.status >= 200 && && r.args.status < 299):
+                case (r.args.status >= 200 && r.args.status < 299):
                     _responseBody.response.statusReason = 'QUERY_PARAM';
                     _responseBody.response.statusBody = 'HEALTHY';
                     break;
-                case (r.args.status >= 300 && && r.args.status < 399):
+                case (r.args.status >= 300 && r.args.status < 399):
                     _responseBody.response.statusReason = 'QUERY_PARAM';
                     _responseBody.response.statusBody = 'REDIRECT';
                     break;
-                case (r.args.status >= 400 && && r.args.status < 499):
+                case (r.args.status >= 400 && r.args.status < 499):
                     _responseBody.response.statusReason = 'QUERY_PARAM';
                     _responseBody.response.statusBody = 'UNAUTHORIZED';
                     break;
-                case (r.args.status >= 500 && && r.args.status < 599):
+                case (r.args.status >= 500 && r.args.status < 599):
                     _responseBody.response.statusReason = 'QUERY_PARAM';
                     _responseBody.response.statusBody = 'UNHEALTHY';
                     break;
