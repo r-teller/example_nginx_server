@@ -28,9 +28,9 @@ function echo(r) {
     _responseBody.request.network.serverAddress = r.variables.server_addr;
     _responseBody.request.network.serverPort = r.variables.server_port;
 
-    _responseBody.request.ssl.isHttps = r.variables.Https != 'undefined' && r.variables == 'on' ? true : false;
-    _responseBody.request.ssl.sslProtocol = r.variables.isHttps != 'undefined' ? r.variables.ssl_protocol : null;
-    _responseBody.request.ssl.sslCipher = r.variables.isHttps != 'undefined' ? r.variables.ssl_cipher : null;
+    _responseBody.request.ssl.isHttps = r.variables.Https != 'undefined' && r.variables.Https == 'on' ? true : false;
+    _responseBody.request.ssl.sslProtocol = r.variables.sslProtocol != 'undefined' ? r.variables.ssl_protocol : null;
+    _responseBody.request.ssl.sslCipher = r.variables.sslCipher != 'undefined' ? r.variables.ssl_cipher : null;
 
     _responseBody.request.session.httpConnection = r.variables.http_connection;
     _responseBody.request.session.requestId = r.variables.request_id;
