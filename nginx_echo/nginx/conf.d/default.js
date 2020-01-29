@@ -4,6 +4,11 @@ function echo(r) {
         _headers[h] = r.headersIn[h];
     }
 
+    var _args = {}
+    for (var a in r.args) {
+        _args[a] = r.args[a];
+    }
+
     var _responseBody = {
         request: {
             uri: {},
@@ -14,13 +19,13 @@ function echo(r) {
         response: {}
     };
 
-    _responseBody.request.uri.headers = _headers;
+    _responseBody.request.uri.headers =  Object.keys(_headers).length ? _headers : undefined;
     _responseBody.request.uri.method = r.variables.request_method;
-    _responseBody.request.uri.schme = r.variables.scheme;
+    _responseBody.request.uri.scheme = r.variables.scheme;
     _responseBody.request.uri.path = r.uri;
     _responseBody.request.uri.fullPath = r.variables.request_uri;
-    _responseBody.request.uri.queryString = Object.keys(r.args).length ? r.args : null;
-    _responseBody.request.uri.body = r.requestBody != 'undefined' ? r.requestBody : null;
+    _responseBody.request.uri.queryString = Object.keys(_args).length ? _args : undefined;
+    _responseBody.request.uri.body = r.requestBody != 'undefined' ? r.requestBody : undefined;
 
 
     _responseBody.request.network.clientPort = r.variables.remote_port;
@@ -29,8 +34,8 @@ function echo(r) {
     _responseBody.request.network.serverPort = r.variables.server_port;
 
     _responseBody.request.ssl.isHttps = r.variables.Https != 'undefined' && r.variables.Https == 'on' ? true : false;
-    _responseBody.request.ssl.sslProtocol = r.variables.sslProtocol != 'undefined' ? r.variables.ssl_protocol : null;
-    _responseBody.request.ssl.sslCipher = r.variables.sslCipher != 'undefined' ? r.variables.ssl_cipher : null;
+    _responseBody.request.ssl.sslProtocol = r.variables.sslProtocol != 'undefined' ? r.variables.ssl_protocol : undefined;
+    _responseBody.request.ssl.sslCipher = r.variables.sslCipher != 'undefined' ? r.variables.ssl_cipher : undefined;
 
     _responseBody.request.session.httpConnection = r.variables.http_connection;
     _responseBody.request.session.requestId = r.variables.request_id;
@@ -61,29 +66,36 @@ function echo(r) {
             }
 
             break;
-        case (r.args.status != undefined && typeof(r.args.status) == number):
-            // Captures requests recieved on TCP port 6000-6999
-            _responseBody.response.statusCode = r.args.status;
+        case (r.args.status != undefined):
+            // Captures requests that have Status Query param defined and that aren't coming in on the 5K or 6K port range
             switch (true) {
-                case (r.args.status >= 200 && r.args.status < 299):
+                case ((/^2[0-9]{2}$/i).test(r.args.status)):
+                    // Regex test to see if Status Query param is between 200-299
                     _responseBody.response.statusReason = 'QUERY_PARAM';
                     _responseBody.response.statusBody = 'HEALTHY';
+                    _responseBody.response.statusCode = Number(r.args.status);
                     break;
-                case (r.args.status >= 300 && r.args.status < 399):
+                case ((/^3[0-9]{2}$/i).test(r.args.status)):
+                    // Regex test to see if Status Query param is between 300-399
                     _responseBody.response.statusReason = 'QUERY_PARAM';
                     _responseBody.response.statusBody = 'REDIRECT';
+                    _responseBody.response.statusCode = Number(r.args.status);
                     break;
-                case (r.args.status >= 400 && r.args.status < 499):
+                case ((/^4[0-9]{2}$/i).test(r.args.status)):
+                    // Regex test to see if Status Query param is between 400-499
                     _responseBody.response.statusReason = 'QUERY_PARAM';
                     _responseBody.response.statusBody = 'UNAUTHORIZED';
+                    _responseBody.response.statusCode = Number(r.args.status);
                     break;
-                case (r.args.status >= 500 && r.args.status < 599):
+                case ((/^5[0-9]{2}$/i).test(r.args.status)):
+                    // Regex test to see if Status Query param is between 500-599
                     _responseBody.response.statusReason = 'QUERY_PARAM';
                     _responseBody.response.statusBody = 'UNHEALTHY';
+                    _responseBody.response.statusCode = Number(r.args.status);
                     break;
                 default:
                     _responseBody.response.statusReason = 'QUERY_PARAM';
-                    _responseBody.response.statusBody = 'UNKNOWN_QUERY_PARAM';
+                    _responseBody.response.statusBody = 'UNKNOWN_QUERY_PARAM - ' + r.args.status;
                     break;
             }
             break;
@@ -91,7 +103,7 @@ function echo(r) {
             // Captures everything else
             break;
     }
-    
+
     _responseBody.response.timeStamp = r.variables.time_iso8601;
 
     r.return(_responseBody.response.statusCode, JSON.stringify(_responseBody) + '\n');
