@@ -4,7 +4,7 @@ echo "Running test to verify nginx.conf syntax"
 nginx -t
 
 echo "Installing JSON syntax validator"
-apt-get install npm
+apt-get install npm -y
 npm install -g ajv-cli
 
 ## Add legacy repo to support old version of curl
