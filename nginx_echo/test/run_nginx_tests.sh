@@ -52,4 +52,4 @@ curl -ks http://localhost/ -X PUT --data "TestingPut" | jq . > ./test_schema_4_p
 curl -ks http://localhost/ -X POST --data "TestingPOST" | jq .  > ./test_schema_4_post.json
 curl -ks https://localhost --tlsv1.0 | jq .  > ./test_schema_4_tlsv10.json
 
-ajv test -s /usr/local/binschema.json -d "./test_schema_*.json" --valid
+ajv test -s /usr/local/bin/schema.json -d "./test_schema_*.json" --valid
