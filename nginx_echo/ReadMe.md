@@ -2,8 +2,26 @@ This is an example nginx server that will return information about the incoming 
 - Pass in a status query param == (2XX | 3XX | 4XX | 5XX ) to get back a custom status code
 - Pass in a request in the 5400 (HTTPS) or 5800 (HTTP) range to recieve a status code of 500
 - Pass in a request in the 6200 (HTTPs) or 6100 (HTTP) range to randomly switch between HEALTHY and UNHEALTHY responses
+- *NOTE* Additional TCP ports in the 4000 (HTTPS) & 8000 range are exposed in case you want a single container to simulate multiple unique endpoints
+
 ```bash
-docker run -dit --net=host --name nginxWorkload rteller/example_nginx_server:latest
+## Launches container on host network, saves you from having to manually expose different ports available for echo
+### NOTE - This will return the HOST machines ip in request.network.serverAddress field
+docker run -dit --net=host --name nginx_echo rteller/nginx_echo:latest
+```
+
+```bash
+## Launches container with the different supported ports exposed
+### NOTE - This will return the CONTAINER machines ip in request.network.serverAddress field
+docker run -dit --name nginx_echo \
+    -p 80:80 -p 443:443 \
+    -p 4000-4999:4000-4999 \
+    -p 5400-5499:5400-5499 \
+    -p 5800-5899:5800-5899 \
+    -p 6100-6199:6100-6199 \
+    -p 6200-6299:6200-6299 \
+    -p 8000-8999:8000-8999 \
+    --restart always rteller/nginx_echo
 ```
 
 ```bash
