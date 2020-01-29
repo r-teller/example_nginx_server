@@ -2,7 +2,7 @@ This is an example nginx server that will return information about the incoming 
 - Pass in a status query param == (2XX | 3XX | 4XX | 5XX ) to get back a custom status code
 - Pass in a request in the 5400 (HTTPS) or 5800 (HTTP) range to recieve a status code of 500
 - Pass in a request in the 6200 (HTTPs) or 6100 (HTTP) range to randomly switch between HEALTHY and UNHEALTHY responses
-- *NOTE* Additional TCP ports in the 4000 (HTTPS) & 8000 range are exposed in case you want a single container to simulate multiple unique endpoints
+- *NOTE* Additional TCP ports in the 4000 (HTTPS) & 8000 (HTTP) range are exposed in case you want a single container to simulate multiple unique endpoints
 
 ```bash
 ## Launches container on host network, saves you from having to manually expose different ports available for echo
