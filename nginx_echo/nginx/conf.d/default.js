@@ -16,6 +16,7 @@ function echo(r) {
             ssl: {},
             session: {}
         },
+        environment: {},
         response: {}
     };
 
@@ -27,6 +28,7 @@ function echo(r) {
     _responseBody.request.uri.queryString = Object.keys(_args).length ? _args : undefined;
     _responseBody.request.uri.body = r.requestBody != 'undefined' ? r.requestBody : undefined;
 
+    _responseBody.environment.machineName = r.variables.hostname;
 
     _responseBody.request.network.clientPort = r.variables.remote_port;
     _responseBody.request.network.clientAddress = r.variables.remote_addr;

@@ -42,6 +42,7 @@ ubuntu@ip-10-10-3-191:~$ curl -ks http://localhost | jq
       "fullPath": "/"
     },
     "network": {
+      "hostname" "9790f7b55dd3",
       "clientPort": "50178",
       "clientAddress": "127.0.0.1",
       "serverAddress": "127.0.0.1",
@@ -55,6 +56,9 @@ ubuntu@ip-10-10-3-191:~$ curl -ks http://localhost | jq
       "connection": "11",
       "connectionNumber": "1"
     }
+  },
+  "environment":{      
+      "machineName" "9790f7b55dd3"
   },
   "response": {
     "statusCode": 200,
@@ -82,6 +86,7 @@ ubuntu@ip-10-10-3-191:~$ curl -ks https://localhost | jq
       "fullPath": "/"
     },
     "network": {
+      "hostname" "9790f7b55dd3",
       "clientPort": "33254",
       "clientAddress": "127.0.0.1",
       "serverAddress": "127.0.0.1",
@@ -97,6 +102,9 @@ ubuntu@ip-10-10-3-191:~$ curl -ks https://localhost | jq
       "connection": "12",
       "connectionNumber": "1"
     }
+  },
+  "environment":{      
+      "machineName" "9790f7b55dd3"
   },
   "response": {
     "statusCode": 200,
@@ -140,6 +148,9 @@ ubuntu@ip-10-10-3-191:~$ curl -ks https://localhost:6200/  | jq
       "connection": "15",
       "connectionNumber": "1"
     }
+  },
+  "environment":{      
+      "machineName" "9790f7b55dd3"
   },
   "response": {
     "statusCode": 500,

@@ -118,6 +118,18 @@
                 "session"
             ]
         },
+        "environment":{
+            "type": "object",
+            "properties": {
+                "machineName": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "machineName"
+            ]
+        },
         "response": {
             "type": "object",
             "properties": {
@@ -146,6 +158,7 @@
     "additionalProperties": false,
     "required": [
         "request",
+        "environment",
         "response"
     ]
 }
