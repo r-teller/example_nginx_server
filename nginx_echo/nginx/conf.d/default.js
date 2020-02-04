@@ -1,3 +1,14 @@
+function weightedSearch(obj) {
+    var weights = Object.values(obj).reduce(function(a, b) { return a + b; }, 0);
+    var random = Math.floor(Math.random() * weights)
+    for (var i = 0; i < Object.keys(obj).length; i++){
+        random -= Object.values(obj)[i];
+        if (random < 0) {
+            return Object.keys(obj)[i];
+        }
+    }
+}
+
 function echo(r) {
     var _headers = {};
     for (var h in r.headersIn) {
@@ -57,9 +68,16 @@ function echo(r) {
             _responseBody.response.statusBody = 'UNHEALTHY';
             break;
         case (r.variables.server_port >= 6000 && r.variables.server_port < 7000):
+            var _randomFailRate = 50;
+            // Checks if randomFailRate status param was provided and that it is between 0 and 100, if not assume the rate of failure should be 50%
+            if (r.args.randomFailRate != undefined && (/^[0-9]$|^[1-9][0-9]$|^(100)$/i).test(r.args.randomFailRate)) {
+                _randomFailRate = Number(r.args.randomFailRate);
+            }
+
             // Captures requests recieved on TCP port 6000-6999
             _responseBody.response.statusReason = 'RANDOM_SERVER_PORT_RANGE';
-            if (Math.floor(Math.random() * 2)) {
+            var _isHealthy = JSON.parse(weightedSearch({false:_randomFailRate,true:100-_randomFailRate}));
+            if (_isHealthy) {
                 _responseBody.response.statusCode = 200;
                 _responseBody.response.statusBody = 'HEALTHY';
             } else {
