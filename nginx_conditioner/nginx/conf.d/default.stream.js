@@ -141,7 +141,22 @@ function praseHeader(data,s){
     return request;
 }
 
+function test(s){    
+    s.on('download', function (data, flags){
+        if (!flags.last) {
+            var response = praseHeader(data,s);
+            s.error(JSON.stringify(response));
+        }
+    })
+}
+
 function streamStart(s){
+    s.on('download', function (data, flags){
+        if (!flags.last) {
+            var response = praseHeader(data,s);
+            s.error(JSON.stringify(response));
+        }
+    })
     s.on('upload', function (data, flags) {
         if (!flags.last) {
             var responseState = readStateHandler(responseFileLocation+s.variables.pid+'_'+responseFileName);
