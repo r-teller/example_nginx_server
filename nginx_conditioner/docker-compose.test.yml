@@ -1,0 +1,4 @@
+sut:
+  build: .
+  command: /usr/local/bin/run_nginx_tests.sh
+
