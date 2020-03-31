@@ -5,6 +5,10 @@ This is an example nginx server that will return information about the incoming 
 - *NOTE* When sending a request in using the 6000 port range you can specify a query param of randomFailRate=[0-100], this will override the default failure rate of 50
 - *NOTE* Additional TCP ports in the 4000 (HTTPS) & 8000 (HTTP) range are exposed in case you want a single container to simulate multiple unique endpoints
 
+# To be documented
+- added support for large blob returns based on file extension
+- add randomized delay based on port or status param
+
 ```bash
 ## Launches container on host network, saves you from having to manually expose different ports available for echo
 ### NOTE - This will return the HOST machines ip in request.network.serverAddress field
@@ -43,7 +47,7 @@ ubuntu@ip-10-10-3-191:~$ curl -ks http://localhost | jq
       "fullPath": "/"
     },
     "network": {
-      "hostname" "9790f7b55dd3",
+      "hostname": "9790f7b55dd3",
       "clientPort": "50178",
       "clientAddress": "127.0.0.1",
       "serverAddress": "127.0.0.1",
@@ -59,7 +63,7 @@ ubuntu@ip-10-10-3-191:~$ curl -ks http://localhost | jq
     }
   },
   "environment":{      
-      "machineName" "9790f7b55dd3"
+      "machineName": "9790f7b55dd3"
   },
   "response": {
     "statusCode": 200,
@@ -87,7 +91,7 @@ ubuntu@ip-10-10-3-191:~$ curl -ks https://localhost | jq
       "fullPath": "/"
     },
     "network": {
-      "hostname" "9790f7b55dd3",
+      "hostname": "9790f7b55dd3",
       "clientPort": "33254",
       "clientAddress": "127.0.0.1",
       "serverAddress": "127.0.0.1",
@@ -105,7 +109,7 @@ ubuntu@ip-10-10-3-191:~$ curl -ks https://localhost | jq
     }
   },
   "environment":{      
-      "machineName" "9790f7b55dd3"
+      "machineName": "9790f7b55dd3"
   },
   "response": {
     "statusCode": 200,
@@ -151,7 +155,7 @@ ubuntu@ip-10-10-3-191:~$ curl -ks https://localhost:6200/  | jq
     }
   },
   "environment":{      
-      "machineName" "9790f7b55dd3"
+      "machineName": "9790f7b55dd3"
   },
   "response": {
     "statusCode": 500,

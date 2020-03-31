@@ -1,3 +1,15 @@
+var fs = require('fs');
+var responseB64 = JSON.parse(fs.readFileSync('./b64blobs.json'));
+
+
+function readStateHandler(file) {
+    try {
+        return JSON.parse(fs.readFileSync(file));
+    } catch (e) {
+        return {};
+    }
+}
+
 function weightedSearch(obj) {
     var weights = Object.values(obj).reduce(function(a, b) { return a + b; }, 0);
     var random = Math.floor(Math.random() * weights)
@@ -6,6 +18,29 @@ function weightedSearch(obj) {
         if (random < 0) {
             return Object.keys(obj)[i];
         }
+    }
+}
+
+function mathRange(min,max){
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function delayHandler(obj,json){
+    if (json.response.addedDelay.status == "ENABLED") {
+        var timer = mathRange(json.response.addedDelay.min,json.response.addedDelay.max);
+        var today = new Date();
+        json.response.addedDelay.timeStamp = today.toISOString();
+        json.response.addedDelay.actual = timer;
+        setTimeout(
+            function(){
+                obj.return(json.response.statusCode, JSON.stringify(json) + '\n');
+            },
+            timer
+        );
+    } else {
+        obj.return(json.response.statusCode, JSON.stringify(json) + '\n');
     }
 }
 
@@ -28,7 +63,9 @@ function echo(r) {
             session: {}
         },
         environment: {},
-        response: {}
+        response: {
+            addedDelay: {}
+        }
     };
 
     _responseBody.request.uri.headers =  Object.keys(_headers).length ? _headers : undefined;
@@ -59,6 +96,69 @@ function echo(r) {
     _responseBody.response.statusCode = 200;
     _responseBody.response.statusReason = 'DEFAULT';
     _responseBody.response.statusBody = 'HEALTHY';
+    _responseBody.response.addedDelay.status = 'DISABLED';
+    _responseBody.response.body = 'Default Body';
+
+    // Check if response body payload should be updated
+    switch (true) {
+        case ((/.js$|.json$/i).test(r.uri)):
+            _responseBody.response.body = responseB64["10-kbfile"];
+            break;
+        case ((/.jpeg$|.jpg$|.png$|.gif$/i).test(r.uri)):
+            _responseBody.response.body = responseB64["1-mbfile"];
+            break;
+        default:
+            break;
+    }
+
+    // Check if response should be delayed
+    switch (true) {
+        case ( (/^[0-9][0-1][0-9][0-9]$/i).test(r.variables.server_port) ):
+            // Do not introduce delay for ports in the X000 or X1000 port range
+            break;
+        case ((/^[0-9][2][0-9][0-9]$/i).test(r.variables.server_port)):
+            _responseBody.response.addedDelay.status = 'ENABLED';
+            _responseBody.response.addedDelay.min = 100;
+            _responseBody.response.addedDelay.max = 200;
+            break;
+        case ((/^[0-9][3][0-9][0-9]$/i).test(r.variables.server_port)):
+            _responseBody.response.addedDelay.status = 'ENABLED';
+            _responseBody.response.addedDelay.min = 200;
+            _responseBody.response.addedDelay.max = 300;
+            break;
+        case ((/^[0-9][4][0-9][0-9]$/i).test(r.variables.server_port)):
+            _responseBody.response.addedDelay.status = 'ENABLED';
+            _responseBody.response.addedDelay.min = 300;
+            _responseBody.response.addedDelay.max = 400;
+            break;
+        case ((/^[0-9][5][0-9][0-9]$/i).test(r.variables.server_port)):
+            _responseBody.response.addedDelay.status = 'ENABLED';
+            _responseBody.response.addedDelay.min = 400;
+            _responseBody.response.addedDelay.max = 500;
+            break;
+        case ((/^[0-9][6][0-9][0-9]$/i).test(r.variables.server_port)):
+            _responseBody.response.addedDelay.status = 'ENABLED';
+            _responseBody.response.addedDelay.min = 500;
+            _responseBody.response.addedDelay.max = 600;
+            break;
+        case ((/^[0-9][7][0-9][0-9]$/i).test(r.variables.server_port)):
+            _responseBody.response.addedDelay.status = 'ENABLED';
+            _responseBody.response.addedDelay.min = 600;
+            _responseBody.response.addedDelay.max = 700;
+            break;
+        case ((/^[0-9][8][0-9][0-9]$/i).test(r.variables.server_port)):
+            _responseBody.response.addedDelay.status = 'ENABLED';
+            _responseBody.response.addedDelay.min = 700;
+            _responseBody.response.addedDelay.max = 800;
+            break;
+        case ((/^[0-9][9][0-9][0-9]$/i).test(r.variables.server_port)):
+            _responseBody.response.addedDelay.status = 'ENABLED';
+            _responseBody.response.addedDelay.min = 0;
+            _responseBody.response.addedDelay.max = 1000;
+            break;
+        default:
+            break;
+    }
 
     switch (true) {
         case (r.variables.server_port >= 5000 && r.variables.server_port < 6000):
@@ -125,6 +225,5 @@ function echo(r) {
     }
 
     _responseBody.response.timeStamp = r.variables.time_iso8601;
-
-    r.return(_responseBody.response.statusCode, JSON.stringify(_responseBody) + '\n');
+    delayHandler(r,_responseBody);
 }
