@@ -133,6 +133,34 @@
         "response": {
             "type": "object",
             "properties": {
+                "addedDelay": {
+                    "type": "object",
+                    "properties": {
+                        "status": {
+                            "type": "string",
+                            "enum": ["ENABLED","DISABLED"]
+                        },
+                        "min":{
+                            "type": "integer"
+                        },
+                        "max": {
+                            "type": "integer"
+                        },
+                        "actual":{
+                            "type": "integer"
+                        },
+                        "timeStamp": {
+                            "type": "string"
+                        }
+                    },
+                    "additionalProperties": false,
+                    "required": [
+                        "status"
+                    ]
+                },
+                "body": {
+                    "type": "string"
+                },
                 "statusCode": {
                     "type": "integer"
                 },
@@ -148,6 +176,8 @@
             },
             "additionalProperties": false,
             "required": [
+                "body",
+                "addedDelay",
                 "statusCode",
                 "statusReason",
                 "statusBody",

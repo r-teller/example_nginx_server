@@ -1,13 +1,14 @@
 This is an example nginx server that will return information about the incoming HTTP Request in a JSON format
-- Pass in a status query param == (2XX | 3XX | 4XX | 5XX ) to get back a custom status code
+- Pass in a 'status' query param == ( 2XX | 3XX | 4XX | 5XX ) to get back a custom status code
+- Pass in a 'delay' query param == ( 200 | 400 | 500 | 600 | 700 | 800 | random ) to induce a random delay
+- *NOTE* the value of the delay indicates the min/max range of the delay
+- Pass in a request in the 4200-4999 (HTPS) or 8200-8999 range to recieve a randomly delayed response
 - Pass in a request in the 5400 (HTTPS) or 5800 (HTTP) range to recieve a status code of 500
 - Pass in a request in the 6200 (HTTPs) or 6100 (HTTP) range to randomly switch between HEALTHY and UNHEALTHY responses
 - *NOTE* When sending a request in using the 6000 port range you can specify a query param of randomFailRate=[0-100], this will override the default failure rate of 50
 - *NOTE* Additional TCP ports in the 4000 (HTTPS) & 8000 (HTTP) range are exposed in case you want a single container to simulate multiple unique endpoints
-
-# To be documented
-- added support for large blob returns based on file extension
-- add randomized delay based on port or status param
+- Pass in a request with the path ending in ( .js | .json ) to recieve a random payload with between 1-5kb
+- Pass in a request with the path ending in ( .jpeg | .jpg | .png | .gif ) to recieve a random payload with between 10-50kb
 
 ```bash
 ## Launches container on host network, saves you from having to manually expose different ports available for echo
@@ -66,9 +67,13 @@ ubuntu@ip-10-10-3-191:~$ curl -ks http://localhost | jq
       "machineName": "9790f7b55dd3"
   },
   "response": {
+    "addedDelay": {
+      "status": "DISABLED"
+    },
     "statusCode": 200,
     "statusReason": "DEFAULT",
     "statusBody": "HEALTHY",
+    "body": "Default Body",
     "timeStamp": "2020-01-29T06:55:07+00:00"
   }
 }
@@ -112,9 +117,13 @@ ubuntu@ip-10-10-3-191:~$ curl -ks https://localhost | jq
       "machineName": "9790f7b55dd3"
   },
   "response": {
+    "addedDelay": {
+      "status": "DISABLED"
+    },
     "statusCode": 200,
     "statusReason": "DEFAULT",
     "statusBody": "HEALTHY",
+    "body": "Default Body",
     "timeStamp": "2020-01-29T06:58:15+00:00"
   }
 }
@@ -159,8 +168,12 @@ ubuntu@ip-10-10-3-191:~$ curl -ks https://localhost:6200/  | jq
   },
   "response": {
     "statusCode": 500,
+    "addedDelay": {
+      "status": "DISABLED"
+    },
     "statusReason": "RANDOM_SERVER_PORT_RANGE",
     "statusBody": "UNHEALTHY",
+    "body": "Default Body",
     "timeStamp": "2020-01-29T07:00:11+00:00"
   }
 }

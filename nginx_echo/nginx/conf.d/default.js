@@ -156,6 +156,7 @@ function echo(r) {
                     _responseBody.response.body = _responseB64+_responseB64+_responseB64+_responseB64+_responseB64;
                     break;
             }
+
             break;
         default:
             break;
@@ -166,42 +167,42 @@ function echo(r) {
         case ( (/^[0-9][0-1][0-9][0-9]$/i).test(r.variables.server_port) ):
             // Do not introduce delay for ports in the X000 or X1000 port range
             break;
-        case ((/^[0-9][2][0-9][0-9]$/i).test(r.variables.server_port)):
+        case ( (/^[4,8][2][0-9][0-9]$/i).test(r.variables.server_port) || (r.args.delay != undefined && (/^2[0-9]{2}$/i).test(r.args.delay)) ):
             _responseBody.response.addedDelay.status = 'ENABLED';
             _responseBody.response.addedDelay.min = 100;
             _responseBody.response.addedDelay.max = 200;
             break;
-        case ((/^[0-9][3][0-9][0-9]$/i).test(r.variables.server_port)):
+        case ( (/^[4,8][3][0-9][0-9]$/i).test(r.variables.server_port) || (r.args.delay != undefined && (/^3[0-9]{2}$/i).test(r.args.delay))):
             _responseBody.response.addedDelay.status = 'ENABLED';
             _responseBody.response.addedDelay.min = 200;
             _responseBody.response.addedDelay.max = 300;
             break;
-        case ((/^[0-9][4][0-9][0-9]$/i).test(r.variables.server_port)):
+        case ( (/^[4,8][4][0-9][0-9]$/i).test(r.variables.server_port) || (r.args.delay != undefined && (/^4[0-9]{2}$/i).test(r.args.delay))):
             _responseBody.response.addedDelay.status = 'ENABLED';
             _responseBody.response.addedDelay.min = 300;
             _responseBody.response.addedDelay.max = 400;
             break;
-        case ((/^[0-9][5][0-9][0-9]$/i).test(r.variables.server_port)):
+        case ( (/^[4,8][5][0-9][0-9]$/i).test(r.variables.server_port) || (r.args.delay != undefined && (/^5[0-9]{2}$/i).test(r.args.delay))):
             _responseBody.response.addedDelay.status = 'ENABLED';
             _responseBody.response.addedDelay.min = 400;
             _responseBody.response.addedDelay.max = 500;
             break;
-        case ((/^[0-9][6][0-9][0-9]$/i).test(r.variables.server_port)):
+        case ( (/^[4,8][6][0-9][0-9]$/i).test(r.variables.server_port) || (r.args.delay != undefined && (/^6[0-9]{2}$/i).test(r.args.delay))):
             _responseBody.response.addedDelay.status = 'ENABLED';
             _responseBody.response.addedDelay.min = 500;
             _responseBody.response.addedDelay.max = 600;
             break;
-        case ((/^[0-9][7][0-9][0-9]$/i).test(r.variables.server_port)):
+        case ( (/^[4,8][7][0-9][0-9]$/i).test(r.variables.server_port) || (r.args.delay != undefined && (/^7[0-9]{2}$/i).test(r.args.delay))):
             _responseBody.response.addedDelay.status = 'ENABLED';
             _responseBody.response.addedDelay.min = 600;
             _responseBody.response.addedDelay.max = 700;
             break;
-        case ((/^[0-9][8][0-9][0-9]$/i).test(r.variables.server_port)):
+        case ( (/^[4,8][8][0-9][0-9]$/i).test(r.variables.server_port) || (r.args.delay != undefined && (/^8[0-9]{2}$/i).test(r.args.delay))):
             _responseBody.response.addedDelay.status = 'ENABLED';
             _responseBody.response.addedDelay.min = 700;
             _responseBody.response.addedDelay.max = 800;
             break;
-        case ((/^[0-9][9][0-9][0-9]$/i).test(r.variables.server_port)):
+        case ( (/^[4,8][9][0-9][0-9]$/i).test(r.variables.server_port) || (r.args.delay != undefined && (/^9[0-9]{2}$/i).test(r.args.delay))):
             _responseBody.response.addedDelay.status = 'ENABLED';
             _responseBody.response.addedDelay.min = 0;
             _responseBody.response.addedDelay.max = 1000;
