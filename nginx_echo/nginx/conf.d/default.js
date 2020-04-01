@@ -1,5 +1,5 @@
 var fs = require('fs');
-var responseB64 = JSON.parse(fs.readFileSync('./b64blobs.json'));
+var responseB64 = JSON.parse(fs.readFileSync('/etc/nginx/conf.d/b64blobs.json'));
 
 
 function readStateHandler(file) {
@@ -102,10 +102,60 @@ function echo(r) {
     // Check if response body payload should be updated
     switch (true) {
         case ((/.js$|.json$/i).test(r.uri)):
-            _responseBody.response.body = responseB64["10-kbfile"];
+            var _fileSizeWeight = {
+                "1k": 50,
+                "2k": 40,
+                "3k": 30,
+                "4k": 20,
+                "5k": 10
+            };
+            var _responseB64 =  responseB64["1kb-file"];
+            _responseBody.response.bodySize = weightedSearch(_fileSizeWeight);
+            switch (_responseBody.response.bodySize) {
+                case "1k":
+                    _responseBody.response.body = _responseB64;
+                    break;
+                case "2k":
+                    _responseBody.response.body = _responseB64+_responseB64;
+                    break;
+                case "3k":
+                    _responseBody.response.body = _responseB64+_responseB64+_responseB64;
+                    break;
+                case "4k":
+                    _responseBody.response.body = _responseB64+_responseB64+_responseB64+_responseB64;
+                    break;
+                case "5k":
+                    _responseBody.response.body = _responseB64+_responseB64+_responseB64+_responseB64+_responseB64;
+                    break;
+            }
             break;
         case ((/.jpeg$|.jpg$|.png$|.gif$/i).test(r.uri)):
-            _responseBody.response.body = responseB64["1-mbfile"];
+            var _fileSizeWeight = {
+                "10k": 50,
+                "20k": 40,
+                "30k": 30,
+                "40k": 20,
+                "50k": 10
+            };
+            var _responseB64 =  responseB64["10kb-file"];
+            _responseBody.response.bodySize = weightedSearch(_fileSizeWeight);
+            switch (_responseBody.response.bodySize) {
+                case "10k":
+                    _responseBody.response.body = _responseB64;
+                    break;
+                case "20k":
+                    _responseBody.response.body = _responseB64+_responseB64;
+                    break;
+                case "30k":
+                    _responseBody.response.body = _responseB64+_responseB64+_responseB64;
+                    break;
+                case "40k":
+                    _responseBody.response.body = _responseB64+_responseB64+_responseB64+_responseB64;
+                    break;
+                case "50k":
+                    _responseBody.response.body = _responseB64+_responseB64+_responseB64+_responseB64+_responseB64;
+                    break;
+            }
             break;
         default:
             break;
