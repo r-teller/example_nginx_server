@@ -25,7 +25,7 @@ docker run -dit --name nginx_gremlin \
     -e ENV_UPSTREAM_RESPONSE_2XX_WEIGHT=100 \
     -e ENV_UPSTREAM_ADDR_HTTP=10.10.0.33:80 \
     -e ENV_UPSTREAM_ADDR_HTTPS=10.10.0.33:443 \
-    --restart always rteller\nginx_gremlin
+    --restart always rteller/nginx_gremlin
 ```
 
 ```bash
@@ -38,7 +38,7 @@ docker run -dit --name nginx_gremlin \
     -e ENV_UPSTREAM_DELAY_RATIO=50 \
     -e ENV_UPSTREAM_ADDR_HTTP=10.10.0.33:80 \
     -e ENV_UPSTREAM_ADDR_HTTPS=10.10.0.33:443 \
-    --restart always rteller\nginx_gremlin
+    --restart always rteller/nginx_gremlin
 ```
 
 ```bash
@@ -56,5 +56,5 @@ docker run -dit --name nginx_gremlin \
     -e ENV_UPSTREAM_RESPONSE_5XX_WEIGHT=50 \
     -e ENV_UPSTREAM_ADDR_HTTP=10.10.0.33:80 \
     -e ENV_UPSTREAM_ADDR_HTTPS=10.10.0.33:443 \
-    --restart always rteller\nginx_gremlin
+    --restart always rteller/nginx_gremlin
 ```
