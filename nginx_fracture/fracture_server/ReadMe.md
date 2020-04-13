@@ -18,19 +18,19 @@ This is an example nginx server that will impact requests that are proxied by it
 
 ```bash
 # Launches container that will randomly resets 50% of requests proxied by weight
-docker run -dit --name nginx_gremlin \
+docker run -dit --name nginx_fracture \
     -p 80:80 \
     -p 443:443 \
     -e ENV_UPSTREAM_RESPONSE_DRP_WEIGHT=100 \
     -e ENV_UPSTREAM_RESPONSE_2XX_WEIGHT=100 \
     -e ENV_UPSTREAM_ADDR_HTTP=10.10.0.33:80 \
     -e ENV_UPSTREAM_ADDR_HTTPS=10.10.0.33:443 \
-    --restart always rteller/nginx_gremlin
+    --restart always rteller/nginx_fracture
 ```
 
 ```bash
 # Launches container that will randomly delay 50% of requests proxied between 1000 and 1500 ms
-docker run -dit --name nginx_gremlin \
+docker run -dit --name nginx_fracture \
     -p 80:80 \
     -p 443:443 \
     -e ENV_UPSTREAM_DELAY_MIN_TIME=1000 \
@@ -38,14 +38,14 @@ docker run -dit --name nginx_gremlin \
     -e ENV_UPSTREAM_DELAY_RATIO=50 \
     -e ENV_UPSTREAM_ADDR_HTTP=10.10.0.33:80 \
     -e ENV_UPSTREAM_ADDR_HTTPS=10.10.0.33:443 \
-    --restart always rteller/nginx_gremlin
+    --restart always rteller/nginx_fracture
 ```
 
 ```bash
 # Launches container that will 
 ## randomly delay 10% of requests proxied between 1000 and 1500 ms
 ## randomly drop or error a weighted amount of traffic
-docker run -dit --name nginx_gremlin \
+docker run -dit --name nginx_fracture \
     -p 80:80 \
     -p 443:443 \
     -e ENV_UPSTREAM_DELAY_MIN_TIME=1000 \
@@ -56,5 +56,5 @@ docker run -dit --name nginx_gremlin \
     -e ENV_UPSTREAM_RESPONSE_5XX_WEIGHT=50 \
     -e ENV_UPSTREAM_ADDR_HTTP=10.10.0.33:80 \
     -e ENV_UPSTREAM_ADDR_HTTPS=10.10.0.33:443 \
-    --restart always rteller/nginx_gremlin
+    --restart always rteller/nginx_fracture
 ```
