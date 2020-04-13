@@ -42,8 +42,8 @@ function mainGremlinPhaseOne(s) {
             var delayMin = Number(s.variables.UPSTREAM_DELAY_MIN_TIME);
             var delayMax = Number(s.variables.UPSTREAM_DELAY_MAX_TIME);
 
-            if (delayMin >= delayMax) {
-                s.error(`ERROR: UPSTREAM_DELAY_MIN_TIME (${delayMin}) is greater than or equal UPSTREAM_DELAY_MAX_TIME (${delayMax})`);
+            if (delayMin > delayMax) {
+                s.error(`ERROR: UPSTREAM_DELAY_MIN_TIME (${delayMin}) is greater than UPSTREAM_DELAY_MAX_TIME (${delayMax})`);
                 s.deny();
             }
             delayTime = mathRange(delayMin,delayMax);

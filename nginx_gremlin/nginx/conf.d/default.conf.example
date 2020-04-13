@@ -1,4 +1,7 @@
 stream {
+    # Log level must be set to ERROR to see NJS log messages
+    error_log /var/log/nginx/error.log none;
+
     # The MIN & MAX Time a request should be delayed before responding
     # The ratio of requests that should be delayed between 0 & 100
     # By default UPSTREAM_DELAY_RATIO is 0
@@ -32,15 +35,6 @@ stream {
         default 1000;
     }
 
-    # # Collection of upstream endpoints to forward traffic to
-    # # Expected format is [SCHEME]://[IP]:[PORT] seperate by a comma
-    # env UPSTREAM_ADDR;
-    #
-    # # Collection of server endpoints to accept traffic for
-    # # Expected format is [SCHEME]://*:[PORT] seperate by a comma
-    # env SERVER_ADDR
-
-
     js_include conf.d/default.js;
 
     upstream httpSocket {
@@ -53,9 +47,10 @@ stream {
         server 127.5.5.5:4444;
     }
 
-
     server {
-        listen 80;
+        # server endpoint to accept traffic on
+        # Expected format is [IP]:[PORT] (*:[PORT] is a valid variable)
+        listen *:80;
 
         ## Checks if the request should be delayed
         js_preread mainGremlinPhaseOne;
@@ -66,7 +61,9 @@ stream {
         proxy_pass httpSocket;
     }
     server {
-        listen 443 ssl;
+        # server endpoint to accept traffic on
+        # Expected format is [IP]:[PORT] (*:[PORT] is a valid variable)
+        listen *:443 ssl;
 
         ssl_certificate /etc/nginx/default.crt;
         ssl_certificate_key /etc/nginx/default.key;
@@ -83,6 +80,9 @@ stream {
     }
 }
 http {
+    # Log level must be set to ERROR to see NJS log messages
+    error_log /var/log/nginx/error.log none;
+
     # js_include conf.d/default.js;
     upstream httpBackend {
         server 10.10.0.33:80;

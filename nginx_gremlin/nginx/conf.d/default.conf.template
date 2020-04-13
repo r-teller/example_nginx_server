@@ -1,4 +1,7 @@
 stream {
+    # Log level must be set to ERROR to see NJS log messages
+    error_log /var/log/nginx/error.log ${ENV_NGINX_ERROR_LEVEL};
+
     # The MIN & MAX Time a request should be delayed before responding
     # The ratio of requests that should be delayed between 0 & 100
     # By default UPSTREAM_DELAY_RATIO is 0
@@ -44,8 +47,8 @@ stream {
 
 
     server {
-        # upstream endpoint to forward traffic to, currently only supports single endpoint
-        # Expected format is [IP]:[PORT] (*:[PORT] is a valid variable)        
+        # server endpoint to accept traffic on
+        # Expected format is [IP]:[PORT] (*:[PORT] is a valid variable)
         listen ${ENV_SERVER_ADDR_HTTP};
 
         ## Checks if the request should be delayed
@@ -57,8 +60,8 @@ stream {
         proxy_pass httpSocket;
     }
     server {
-        # upstream endpoint to forward traffic to, currently only supports single endpoint
-        # Expected format is [IP]:[PORT] (*:[PORT] is a valid variable)        
+        # server endpoint to accept traffic on
+        # Expected format is [IP]:[PORT] (*:[PORT] is a valid variable)
         listen ${ENV_SERVER_ADDR_HTTPS} ssl;
 
         ssl_certificate /etc/nginx/default.crt;
@@ -76,6 +79,8 @@ stream {
     }
 }
 http {
+    # Log level must be set to ERROR to see NJS log messages
+    error_log /var/log/nginx/error.log ${ENV_NGINX_ERROR_LEVEL};
 
     # upstream endpoint to forward traffic to, currently only supports single endpoint
     # Expected format is [IP]:[PORT]
