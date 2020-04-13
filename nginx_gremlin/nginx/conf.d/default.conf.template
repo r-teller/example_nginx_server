@@ -4,41 +4,41 @@ stream {
     # By default UPSTREAM_DELAY_RATIO is 0
 
     map '' $UPSTREAM_DELAY_MIN_TIME {
-        default ${UPSTREAM_DELAY_MIN_TIME};
+        default ${ENV_UPSTREAM_DELAY_MIN_TIME};
     }
     map '' $UPSTREAM_DELAY_MAX_TIME {
-        default ${UPSTREAM_DELAY_MAX_TIME};
+        default ${ENV_UPSTREAM_DELAY_MAX_TIME};
     }
     map '' $UPSTREAM_DELAY_RATIO {
-        default ${UPSTREAM_DELAY_RATIO};
+        default ${ENV_UPSTREAM_DELAY_RATIO};
     }
 
     # Weights for all responses are aggregated and used to determine the behavior
     # By default all weights are 0 except 2XX which will have a weight of 100
     map '' $UPSTREAM_RESPONSE_DRP_WEIGHT {
-        default ${UPSTREAM_RESPONSE_DRP_WEIGHT};
+        default ${ENV_UPSTREAM_RESPONSE_DRP_WEIGHT};
     }
     map '' $UPSTREAM_RESPONSE_2XX_WEIGHT {
-        default ${UPSTREAM_RESPONSE_2XX_WEIGHT};
+        default ${ENV_UPSTREAM_RESPONSE_2XX_WEIGHT};
     }
     # Redirect Response is not currently implemented so ignoring the value
     # map '' $UPSTREAM_RESPONSE_3XX_WEIGHT {
-    #     default ${UPSTREAM_RESPONSE_3XX_WEIGHT};
+    #     default ${ENV_UPSTREAM_RESPONSE_3XX_WEIGHT};
     # }
     map '' $UPSTREAM_RESPONSE_4XX_WEIGHT {
-        default ${UPSTREAM_RESPONSE_4XX_WEIGHT};
+        default ${ENV_UPSTREAM_RESPONSE_4XX_WEIGHT};
     }
     map '' $UPSTREAM_RESPONSE_5XX_WEIGHT {
-        default ${UPSTREAM_RESPONSE_5XX_WEIGHT};
+        default ${ENV_UPSTREAM_RESPONSE_5XX_WEIGHT};
     }
 
     # upstream endpoint to forward traffic to, currently only supports single endpoint
     # Expected format is [IP]:[PORT] (*:[PORT] is a valid variable)
     map '' $SERVER_ADDR_HTTP {
-        default ${SERVER_ADDR_HTTP}
+        default ${ENV_SERVER_ADDR_HTTP}
     }
     map '' $SERVER_ADDR_HTTPS {
-        default ${SERVER_ADDR_HTTPS}
+        default ${ENV_SERVER_ADDR_HTTPS}
     }
 
     js_include conf.d/default.js;
@@ -85,10 +85,10 @@ http {
     # upstream endpoint to forward traffic to, currently only supports single endpoint
     # Expected format is [IP]:[PORT]
     map '' $UPSTREAM_ADDR_HTTP {
-        default ${UPSTREAM_ADDR_HTTP}
+        default ${ENV_UPSTREAM_ADDR_HTTP}
     }
     map '' $UPSTREAM_ADDR_HTTPS {
-        default ${UPSTREAM_ADDR_HTTPS}
+        default ${ENV_UPSTREAM_ADDR_HTTPS}
     }
 
     upstream httpBackend {
