@@ -23,9 +23,10 @@ RUN apt-get clean
 RUN rm /etc/nginx/conf.d/default.conf
 RUN rm /etc/nginx/nginx.conf
 
+COPY ./entrypoint.sh /usr/local/bin/
 COPY ./nginx/conf.d/* /etc/nginx/conf.d/
 COPY ./nginx/nginx.conf /etc/nginx/
 COPY ./nginx/ssl/* /etc/nginx/
 
-CMD ["/bin/sh", "-c" "envsubst \"$(env | sed -e 's/=.*//' -e 's/^/\$/g')\" < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf", "&&", "nginx", "-g", "daemon off;"]
-# ENTRYPOINT [ "entrypoint.sh" ]
+WORKDIR /usr/local/bin/
+ENTRYPOINT [ "entrypoint.sh" ]

@@ -1,0 +1,1 @@
+/bin/bash -c "envsubst \"$(env | sed -e 's/=.*//' -e 's/^/\$/g')\" < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf &&  && exec nginx -g 'daemon off;'"
