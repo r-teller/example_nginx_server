@@ -1,0 +1,131 @@
+stream {
+    # The MIN & MAX Time a request should be delayed before responding
+    # The ratio of requests that should be delayed between 0 & 100
+    # By default UPSTREAM_DELAY_RATIO is 0
+
+    map '' $UPSTREAM_DELAY_MIN_TIME {
+        default 0;
+    }
+    map '' $UPSTREAM_DELAY_MAX_TIME {
+        default 1000;
+    }
+    map '' $UPSTREAM_DELAY_RATIO {
+        default 0;
+    }
+
+    # Weights for all responses are aggregated and used to determine the behavior
+    # By default all weights are 0 except 2XX which will have a weight of 100
+    map '' $UPSTREAM_RESPONSE_DRP_WEIGHT {
+        default 1000;
+    }
+    map '' $UPSTREAM_RESPONSE_2XX_WEIGHT {
+        default 1000;
+    }
+    # Redirect Response is not currently implemented so ignoring the value
+    # map '' $UPSTREAM_RESPONSE_3XX_WEIGHT {
+    #     default 1000;
+    # }
+    map '' $UPSTREAM_RESPONSE_4XX_WEIGHT {
+        default 1000;
+    }
+    map '' $UPSTREAM_RESPONSE_5XX_WEIGHT {
+        default 1000;
+    }
+
+    # # Collection of upstream endpoints to forward traffic to
+    # # Expected format is [SCHEME]://[IP]:[PORT] seperate by a comma
+    # env UPSTREAM_ADDR;
+    #
+    # # Collection of server endpoints to accept traffic for
+    # # Expected format is [SCHEME]://*:[PORT] seperate by a comma
+    # env SERVER_ADDR
+
+
+    js_include conf.d/default.js;
+
+    upstream httpSocket {
+        server unix:/var/run/httpSocket.sock;
+        # server 127.5.5.5:8888;
+    }
+
+    upstream httpsSocket {
+        server unix:/var/run/httpsSocket.sock;
+        server 127.5.5.5:4444;
+    }
+
+
+    server {
+        listen 80;
+
+        ## Checks if the request should be delayed
+        js_preread mainGremlinPhaseOne;
+
+        ## Checks if the response should be modified
+        js_filter  mainGremlinPhaseTwo;
+
+        proxy_pass httpSocket;
+    }
+    server {
+        listen 443 ssl;
+
+        ssl_certificate /etc/nginx/default.crt;
+        ssl_certificate_key /etc/nginx/default.key;
+
+
+        ## Checks if the request should be delayed
+        js_preread mainGremlinPhaseOne;
+
+        ## Checks if the response should be modified
+        js_filter  mainGremlinPhaseTwo;
+
+        proxy_ssl on;
+        proxy_pass httpsSocket;
+    }
+}
+http {
+    # js_include conf.d/default.js;
+    upstream httpBackend {
+        server 10.10.0.33:80;
+    }
+    upstream httpsBackend {
+        server 10.10.0.33:443;
+    }
+
+    server {
+        listen unix:/var/run/httpSocket.sock default_server;
+
+        location / { proxy_pass http://httpBackend; }
+        location /error/400 { return 400; }
+        location /error/401 { return 401; }
+        location /error/403 { return 403; }
+        location /error/404 { return 404; }
+        location /error/405 { return 405; }
+        location /error/429 { return 429; }
+        location /error/444 { return 444; }
+        location /error/500 { return 500; }
+        location /error/502 { return 502; }
+        location /error/503 { return 503; }
+        location /error/504 { return 504; }
+        location /error { return 404 "ERROR NOT FOUND"; }
+    }
+    server {
+        listen unix:/var/run/httpsSocket.sock default_server ssl;
+
+        ssl_certificate /etc/nginx/default.crt;
+        ssl_certificate_key /etc/nginx/default.key;
+
+        location / { proxy_pass http://httpBackend; }
+        location /error/400 { return 400; }
+        location /error/401 { return 401; }
+        location /error/403 { return 403; }
+        location /error/404 { return 404; }
+        location /error/405 { return 405; }
+        location /error/429 { return 429; }
+        location /error/444 { return 444; }
+        location /error/500 { return 500; }
+        location /error/502 { return 502; }
+        location /error/503 { return 503; }
+        location /error/504 { return 504; }
+        location /error { return 404 "ERROR NOT FOUND"; }
+    }
+}
