@@ -1,5 +1,5 @@
 This is an example nginx server that will impact requests that are proxied by it based on provided environment variables
-
+- ENV_NGINX_ERROR_LEVEL = sets the error logging level for nginx (default=none)
 - ENV_UPSTREAM_DELAY_MIN_TIME = specifies the minimum delay to use when delaying a request (default=0)
 - ENV_UPSTREAM_DELAY_MAX_TIME = specifies the maximum delay to use when delaying a request (default=1000)
 - ENV_UPSTREAM_DELAY_RATIO = specifies the liklihood that a request will be delayed (default=0)
