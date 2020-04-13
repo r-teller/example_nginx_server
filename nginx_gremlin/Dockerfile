@@ -27,5 +27,5 @@ COPY ./nginx/conf.d/* /etc/nginx/conf.d/
 COPY ./nginx/nginx.conf /etc/nginx/
 COPY ./nginx/ssl/* /etc/nginx/
 
-CMD ["envsubst < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf", "nginx", "-g", "daemon off;"]
+CMD ["/bin/sh", "-c" "envsubst \"$(env | sed -e 's/=.*//' -e 's/^/\$/g')\" < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf", "&&", "nginx", "-g", "daemon off;"]
 # ENTRYPOINT [ "entrypoint.sh" ]

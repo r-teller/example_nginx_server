@@ -32,15 +32,6 @@ stream {
         default ${ENV_UPSTREAM_RESPONSE_5XX_WEIGHT};
     }
 
-    # upstream endpoint to forward traffic to, currently only supports single endpoint
-    # Expected format is [IP]:[PORT] (*:[PORT] is a valid variable)
-    map '' $SERVER_ADDR_HTTP {
-        default ${ENV_SERVER_ADDR_HTTP}
-    }
-    map '' $SERVER_ADDR_HTTPS {
-        default ${ENV_SERVER_ADDR_HTTPS}
-    }
-
     js_include conf.d/default.js;
 
     upstream httpSocket {
@@ -53,7 +44,9 @@ stream {
 
 
     server {
-        listen $SERVER_ADDR_HTTP;
+        # upstream endpoint to forward traffic to, currently only supports single endpoint
+        # Expected format is [IP]:[PORT] (*:[PORT] is a valid variable)        
+        listen ${ENV_SERVER_ADDR_HTTP};
 
         ## Checks if the request should be delayed
         js_preread mainGremlinPhaseOne;
@@ -64,7 +57,9 @@ stream {
         proxy_pass httpSocket;
     }
     server {
-        listen $SERVER_ADDR_HTTPS ssl;
+        # upstream endpoint to forward traffic to, currently only supports single endpoint
+        # Expected format is [IP]:[PORT] (*:[PORT] is a valid variable)        
+        listen ${ENV_SERVER_ADDR_HTTPS} ssl;
 
         ssl_certificate /etc/nginx/default.crt;
         ssl_certificate_key /etc/nginx/default.key;
@@ -84,18 +79,12 @@ http {
 
     # upstream endpoint to forward traffic to, currently only supports single endpoint
     # Expected format is [IP]:[PORT]
-    map '' $UPSTREAM_ADDR_HTTP {
-        default ${ENV_UPSTREAM_ADDR_HTTP}
-    }
-    map '' $UPSTREAM_ADDR_HTTPS {
-        default ${ENV_UPSTREAM_ADDR_HTTPS}
-    }
 
     upstream httpBackend {
-        server $UPSTREAM_ADDR_HTTP;
+        server ${ENV_UPSTREAM_ADDR_HTTP};
     }
     upstream httpsBackend {
-        server $UPSTREAM_ADDR_HTTPS;
+        server ${ENV_UPSTREAM_ADDR_HTTPS};
     }
 
     server {
