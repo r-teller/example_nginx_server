@@ -36,5 +36,4 @@ do
         /usr/local/bin/wrk -t1 -c$((3 * $intvalue)) -d20s ${wrkEndpoint} >> /dev/stdout
     fi
     sleep 10
-    exit 1
 done

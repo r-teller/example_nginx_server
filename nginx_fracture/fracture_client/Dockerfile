@@ -13,7 +13,7 @@ RUN apt-get clean
 
 
 COPY ./entrypoint.sh /usr/local/bin/
-COPY ./wrk/loadGen.lua /usr/local/bin/
+COPY ./wrk/* /usr/local/bin/
 
 WORKDIR /usr/local/bin/
 
