@@ -27,7 +27,7 @@ do
 
     if [ ! -z "${wrkScript}" ]; then
         if [ -f "${wrkScript}" ]; then
-            /usr/local/bin/wrk -t1 -c$((3 * $intvalue)) -s ${wrkScript}  -d20s http://${wrkEndpoint} >> /dev/stdout
+            /usr/local/bin/wrk -t1 -c$((3 * $intvalue)) -s ${wrkScript}  -d20s ${wrkEndpoint} >> /dev/stdout
         else
             echo "ERROR: Environment variable wrkScript was defined but does not exist at ${wrkScript}" >> /dev/stderr
             exit 1
