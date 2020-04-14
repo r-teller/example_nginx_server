@@ -204,8 +204,8 @@ function echo(r) {
             break;
         case ( (/^[4,8][9][0-9][0-9]$/i).test(r.variables.server_port) || (r.args.delay != undefined && (/^9[0-9]{2}$/i).test(r.args.delay))):
             _responseBody.response.addedDelay.status = 'ENABLED';
-            _responseBody.response.addedDelay.min = 0;
-            _responseBody.response.addedDelay.max = 1000;
+            _responseBody.response.addedDelay.min = 1000;
+            _responseBody.response.addedDelay.max = 10000;
             break;
         default:
             break;

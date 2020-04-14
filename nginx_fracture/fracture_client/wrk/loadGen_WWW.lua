@@ -112,7 +112,9 @@ function request()
     if path == '/' then
         if paths[(requests % #paths)+1] == '' then
             path = '/%d/%s'
-            if params then
+            if files[(requests % #files)+1] == 'index.html' then
+                path = path..?delay=900
+            elseif params then
                 path = path..params
             end
             path = path:format((requests % pathCount)+1,files[(requests % #files)+1])
