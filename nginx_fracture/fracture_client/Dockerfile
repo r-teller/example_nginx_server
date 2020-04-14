@@ -10,7 +10,7 @@ RUN make -C /var/tmp/wrk2
 RUN cp /var/tmp/wrk2/wrk /usr/local/bin/wrk2
 
 RUN mkdir -p /var/tmp/wrk
-RUN git clone https://github.com/wg/wrk.gitt /var/tmp/wrk
+RUN git clone https://github.com/wg/wrk.git /var/tmp/wrk
 RUN make -C /var/tmp/wrk
 RUN cp /var/tmp/wrk/wrk /usr/local/bin/wrk
 

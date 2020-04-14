@@ -17,5 +17,7 @@ docker run -itd --net host --restart always \
 docker run --rm -it --entrypoint /bin/bash \
     -e wrkScript='/usr/local/bin/loadGen_A.lua' \
     -e wrkEndpoint='http://ratecalculator.acmefinancial.net' \
+	--add-host=ratecalculator.acmefinancial.net:10.1.10.5 \
+	--add-host=ratecalculator.acmefinancial.net:10.1.10.6 \
     rteller/wrk_fracture
 ```
