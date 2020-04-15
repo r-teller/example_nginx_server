@@ -12,10 +12,29 @@ docker run -itd --net host --restart always \
 
 ```bash
 docker run -itd --net host --restart always \
+    --name wrk_mortgage.acmefinancial.net \
+    --add-host=mortgage.acmefinancial.net:10.1.20.5 \
+    -e wrkScript='/usr/local/bin/loadGen_Mortgage.lua' \
+    -e wrkEndpoint='https://mortgage.acmefinancial.net' \
+    rteller/wrk_fracture
+```
+
+```bash
+docker run -itd --net host --restart always \
     --name wrk_servicecenter.acmefinancial.net \
     --add-host=servicecenter.acmefinancial.net:10.1.10.6 \
     -e wrkScript='/usr/local/bin/loadGen.lua' \
     -e wrkEndpoint='http://servicecenter.acmefinancial.net' \
+    rteller/wrk_fracture
+```
+
+```bash
+## Generates load on prod trading app after deployment
+docker run -itd --net host --restart always \
+    --name wrk_trading.acmefinancial.net \
+    --add-host=trading.acmefinancial.net:10.1.20.6 \
+    -e wrkScript='/usr/local/bin/loadGen_Trading.lua' \
+    -e wrkEndpoint='https://trading.acmefinancial.net' \
     rteller/wrk_fracture
 ```
 

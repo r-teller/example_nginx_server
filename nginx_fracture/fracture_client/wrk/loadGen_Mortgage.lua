@@ -122,6 +122,7 @@ function request()
                 path = path..params
             end
             path = path:format(paths[(requests % #paths)+1],(requests % pathCount)+1,files[(requests % #files)+1])
+        end
     end
 
     wrk.path = path
