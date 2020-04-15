@@ -1,4 +1,4 @@
--- Coming Soon
+-- Coming Soon --
 
 
 ```bash
@@ -57,18 +57,42 @@ docker run -itd --net host --restart always \
 
 ```bash
 docker run -itd --net host --restart always \
-    --name wrk_tradingdev.acmefinancial.net \
+    --name wrk_trading.dev.acmefinancial.net \
     --add-host=trading.dev.acmefinancial.net:10.1.20.8 \
+    -e wrkScript='/usr/local/bin/loadGen_Trading.lua' \
     -e wrkEndpoint='https://trading.dev.acmefinancial.net' \
     rteller/wrk_fracture
 ```
 
-```bash
+-- Everything Below Here is used for testing of scripts, IGNORE --
 
+```bash
 docker run --rm -it --entrypoint /bin/bash \
-    -e wrkScript='/usr/local/bin/loadGen_A.lua' \
+    -e wrkScript='/usr/local/bin/loadGen_Accounts-Internal.lua' \
     --add-host=accounts.internal.acmefinancial.net:10.1.10.16 \
     -e wrkEndpoint='https://accounts.internal.acmefinancial.net' \
     -v /home/ubuntu/entrypoint.sh:/usr/local/bin/entrypoint.sh \
+    rteller/wrk_fracture
+```
+
+```bash
+docker run --rm -it --entrypoint /bin/bash \
+    --name wrk_www.dev.acmefinancial.net \
+    --add-host=www.dev.acmefinancial.net:10.1.20.8 \
+    -e wrkScript='/usr/local/bin/loadGen_WWW.lua' \
+    -v /home/ubuntu/loadGen_WWW.lua:/usr/local/bin/loadGen_WWW.lua \
+    -v /home/ubuntu/entrypoint.sh:/usr/local/bin/entrypoint.sh \
+    -e wrkEndpoint='https://www.dev.acmefinancial.net' \
+    rteller/wrk_fracture
+```
+```bash
+
+docker run --rm -it --entrypoint /bin/bash \
+    --name wrk_tradin.gdev.acmefinancial.net \
+    --add-host=trading.dev.acmefinancial.net:10.1.20.8 \
+    -e wrkScript='/usr/local/bin/loadGen_Trading.lua' \
+    -v /home/ubuntu/loadGen_Trading.lua:/usr/local/bin/loadGen_Trading.lua \
+    -v /home/ubuntu/entrypoint.sh:/usr/local/bin/entrypoint.sh \
+    -e wrkEndpoint='https://trading.dev.acmefinancial.net' \
     rteller/wrk_fracture
 ```

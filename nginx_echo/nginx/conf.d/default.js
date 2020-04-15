@@ -164,7 +164,7 @@ function echo(r) {
 
     // Check if response should be delayed
     switch (true) {
-        case ( (/^[0-9][0-1][0-9][0-9]$/i).test(r.variables.server_port) ):
+        case ( (/^[0-9][0-1][0-9][0-9]$/i).test(r.variables.server_port) && (r.args.delay == undefined)):
             // Do not introduce delay for ports in the X000 or X1000 port range
             break;
         case ( (/^[4,8][2][0-9][0-9]$/i).test(r.variables.server_port) || (r.args.delay != undefined && (/^2[0-9]{2}$/i).test(r.args.delay)) ):
