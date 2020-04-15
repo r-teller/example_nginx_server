@@ -110,18 +110,11 @@ function request()
     end
 
     if path == '/' then
-        if paths[(requests % #paths)+1] == '' then
-            path = '/%d/%s'
-            if params then
-                path = path..params
-            end
-            path = path:format((requests % pathCount)+1,files[(requests % #files)+1])
-        else
-            path = '/%s/%d/%s'
-            if params then
-                path = path..params
-            end
-            path = path:format(paths[(requests % #paths)+1],(requests % pathCount)+1,files[(requests % #files)+1])
+        path = '/%d/%s/%s'
+        if params then
+            path = path..params
+        end
+        path = path:format((requests % pathCount)+1,paths[(requests % #paths)+1],files[(requests % #files)+1])
     end
 
     wrk.path = path
