@@ -58,3 +58,16 @@ docker run -dit --name nginx_fracture \
     -e ENV_UPSTREAM_ADDR_HTTPS=10.10.0.33:443 \
     --restart always rteller/nginx_fracture
 ```
+
+```bash
+docker run -dit --name nginx_fracture_www \
+    -p 9901:80 \
+    -e ENV_UPSTREAM_DELAY_MIN_TIME=1000 \
+    -e ENV_UPSTREAM_DELAY_MAX_TIME=1500 \
+    -e ENV_UPSTREAM_DELAY_RATIO=100 \
+    -e ENV_UPSTREAM_RESPONSE_2XX_WEIGHT=100 \
+    -e ENV_UPSTREAM_RESPONSE_5XX_WEIGHT=25 \
+    -e ENV_UPSTREAM_ADDR_HTTP=10.1.20.21:8001 \
+    -e ENV_UPSTREAM_ADDR_HTTPS=10.1.20.21:8001 \
+    --restart always rteller/nginx_fracture
+```

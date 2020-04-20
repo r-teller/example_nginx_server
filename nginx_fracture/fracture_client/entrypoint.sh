@@ -13,6 +13,12 @@ do
         OFFSET=${wrkOffset}
     fi
 
+    if [ -z "${wrkMulti}" ]; then
+        multi=1
+    else
+        multi=${wrkMulti}
+    fi
+
     echo "Started: $(date) with OFFSET of ${OFFSET}\r\n" >> /dev/stdout
     offset=$(((`date +%s -d "now + $OFFSET hour"`) % 86400))
     offsetReduced=`echo "$offset/86400" | bc -l`
@@ -28,7 +34,7 @@ do
 
     value=`echo "define abs(x) {if (x<0) {return -x}; return x;} $min + $max * $variationReduced / (1 +(abs($c-$offsetReduced)/$a)^(2*$b))" | bc -l`
 
-    sin=`echo "define abs(x) {if (x<0) {return -x}; return x;} 3 * (abs( s($value) * (s($value*$c)))*100)" | bc -l`
+    sin=`echo "define abs(x) {if (x<0) {return -x}; return x;} ${multi} * (abs( s($value) * (s($value*$c)))*100)" | bc -l`
 
     intvalue=${sin%.*}
 

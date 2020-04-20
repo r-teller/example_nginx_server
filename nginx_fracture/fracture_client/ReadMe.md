@@ -6,14 +6,14 @@ docker run -itd --net host --restart always \
     --name wrk_ratecalculator.acmefinancial.net \
     --add-host=ratecalculator.acmefinancial.net:10.1.10.5 \
     -e wrkScript='/usr/local/bin/loadGen.lua' \
-    -e wrkEndpoint='http://ratecalculator.acmefinancial.net' \
+    -e wrkEndpoint='https://ratecalculator.acmefinancial.net' \
     rteller/wrk_fracture
 ```
 
 ```bash
 docker run -itd --net host --restart always \
     --name wrk_mortgage.acmefinancial.net \
-    --add-host=mortgage.acmefinancial.net:10.1.20.5 \
+    --add-host=mortgage.acmefinancial.net:10.1.10.5 \
     -e wrkScript='/usr/local/bin/loadGen_Mortgage.lua' \
     -e wrkEndpoint='https://mortgage.acmefinancial.net' \
     rteller/wrk_fracture
@@ -24,7 +24,7 @@ docker run -itd --net host --restart always \
     --name wrk_servicecenter.acmefinancial.net \
     --add-host=servicecenter.acmefinancial.net:10.1.10.6 \
     -e wrkScript='/usr/local/bin/loadGen.lua' \
-    -e wrkEndpoint='http://servicecenter.acmefinancial.net' \
+    -e wrkEndpoint='https://servicecenter.acmefinancial.net' \
     rteller/wrk_fracture
 ```
 
