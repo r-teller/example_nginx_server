@@ -208,9 +208,11 @@ function echo(r) {
             _responseBody.response.addedDelay.max = 10000;
             break;
         case ( (/^[-+]?\d*$/i).test(r.variables.http_delay_min) && (/^[-+]?\d*$/i).test(r.variables.http_delay_max)):
-            _responseBody.response.addedDelay.status = 'ENABLED';
-            _responseBody.response.addedDelay.min = r.variables.http_delay_min;
-            _responseBody.response.addedDelay.max = r.variables.http_delay_max;
+            if (r.variables.http_delay_min < r.variables.http_delay_max) {
+                _responseBody.response.addedDelay.status = 'ENABLED';
+                _responseBody.response.addedDelay.min = r.variables.http_delay_min;
+                _responseBody.response.addedDelay.max = r.variables.http_delay_max;
+            }
         default:
             break;
     }
