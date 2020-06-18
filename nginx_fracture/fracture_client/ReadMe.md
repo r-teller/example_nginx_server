@@ -31,6 +31,27 @@ docker run -itd --net host --restart always \
     rteller/wrk_fracture
 ```
 
+## East Load Gen
+
+```bash
+docker run -itd --net host --restart always \
+    --name wrk_mortgage.acmefinancial.net \
+    --add-host=mortgage.acmefinancial.net:10.1.30.111 \
+    -e wrkMulti='3' \
+    -e wrkScript='/usr/local/bin/loadGen_Mortgage_delay.lua' \
+    -e wrkEndpoint='https://mortgage.acmefinancial.net' \
+    rteller/wrk_fracture
+```
+
+```bash
+docker run -itd --net host --restart always \
+    --name wrk_servicecenter.acmefinancial.net \
+    --add-host=servicecenter.acmefinancial.net:10.1.30.112 \
+    -e wrkMulti='3' \
+    -e wrkScript='/usr/local/bin/loadGen.lua' \
+    -e wrkEndpoint='https://servicecenter.acmefinancial.net' \
+    rteller/wrk_fracture
+
 ```bash
 ## Generates load on prod trading app after deployment
 docker run -itd --net host --restart always \
