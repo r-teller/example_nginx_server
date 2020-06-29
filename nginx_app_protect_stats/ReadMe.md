@@ -1,10 +1,10 @@
 This example is a proof of concept built around extending NGINX+ API stats using NJS to include information for AppProtect.
 
-The nginx.conf uses the keyval store to track incoming requests and NJS to incrmenet the appropriate field. All stats are tracked based on the policy name and version.
+The nginx.conf uses the keyval store to track incoming requests and NJS to increment the appropriate field. All stats are tracked based on the policy name and version.
 
 This is not meant to be a long lived solution but a POC
 
-App Protect access_log docuemtnation can be found --> https://docs.nginx.com/nginx-app-protect/troubleshooting/#access-logs
+App Protect access_log documentation can be found --> https://docs.nginx.com/nginx-app-protect/troubleshooting/#access-logs
 
 *Note: to flush app_protect stats use query param flush=true, to flush for a specific policy name use query param policy_name=<policy-name>
 
