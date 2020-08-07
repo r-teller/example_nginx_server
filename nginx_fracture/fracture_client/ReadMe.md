@@ -115,7 +115,7 @@ docker run -itd --net host --restart always \
 
 ```bash
 docker run -itd --net host --restart always \
-    --name wrk_trading.dev.acmefinancial.net \
+    --name wrk_trading.dev.acmefinancial.net-cas \
     --add-host=trading.dev.acmefinancial.net:10.1.20.113 \
     -e wrkMulti='3' \
     -e wrkScript='/usr/local/bin/loadGen_Trading_CAS.lua' \

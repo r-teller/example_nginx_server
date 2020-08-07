@@ -12,12 +12,12 @@ table.insert(requestTypes,{weight = 1, type = 'casAttacks'})
 table.insert(requestTypes,{weight = 10, type = 'tradingPage'})
 
 local casAttacks = {}
-table.insert(casAttacks,{weight = 1, method = 'GET', path = '/?v=<script>'}, signature_ids = {[200001475, 200000098]='Cross-site scripting'})
-table.insert(casAttacks,{weight = 1, method = 'GET', path = '/?v=SELECT FROM DUAL'}, signature_ids = {[200002620]='SQL Injection'})
-table.insert(casAttacks,{weight = 10, method = 'GET', path = '/wp-admin/admin-post.php?do_reset_wordpress'}, signature_ids = {[200013018]='Authentication Bypass'})
-table.insert(casAttacks,{weight = 1, method = 'GET', path = '/one/../object.html'}, signature_ids = {[200007029 ]='Directory Traversal attempt'})
-table.insert(casAttacks,{weight = 4, method = 'POST', path = '/trading/login.php', body = '{ "name" : }}"String.fromCharCode" }'}, signature_ids = {[200001097]='.fromcharcode (Parameter)'})
-table.insert(casAttacks,{weight = 1, method = 'POST', path = '/xml_profile', body = '<?xml version="1.0"?><envelope><subject>Your order <num>1032</num></subject><letter>Dear Mr.<name>John Smith</>.Your order <orderid>1032</orderid>will be &lt;sCript shipped on <shipdate>2001-07-13</shipdate>. </letter><logo>image.gif</logo></envelope>'}, signature_ids = {[200000098]='XSS script tag (Parameter)'})
+table.insert(casAttacks,{weight = 1, method = 'GET', path = '/?v=<script>'})
+table.insert(casAttacks,{weight = 1, method = 'GET', path = '/?v=SELECT FROM DUAL'})
+table.insert(casAttacks,{weight = 10, method = 'GET', path = '/wp-admin/admin-post.php?do_reset_wordpress'})
+table.insert(casAttacks,{weight = 1, method = 'GET', path = '/one/../object.html'})
+table.insert(casAttacks,{weight = 4, method = 'POST', path = '/trading/login.php', body = '{ "name" : }}"String.fromCharCode" }'})
+table.insert(casAttacks,{weight = 1, method = 'POST', path = '/xml_profile', body = '<?xml version="1.0"?><envelope><subject>Your order <num>1032</num></subject><letter>Dear Mr.<name>John Smith</>.Your order <orderid>1032</orderid>will be &lt;sCript shipped on <shipdate>2001-07-13</shipdate>. </letter><logo>image.gif</logo></envelope>'})
 
 local mainPage = {}
 table.insert(mainPage,{weight = 1, method = 'GET', path = '/favicon.ico'})
