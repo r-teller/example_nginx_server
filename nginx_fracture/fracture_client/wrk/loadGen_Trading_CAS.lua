@@ -1,5 +1,25 @@
 math.randomseed(os.time())
 
+function curvePattern(obj)
+    a=0.4 --# width - Width GE 1 provides deminishing returns for graphing
+    b=2 --# Slope
+    c=0.2 --# Constant - Constant GE 1 flattens the graph
+    max=30
+    min=5
+
+    local offset = (os.time() + 3600 ) % 86400
+    local offsetReduced = offset/86400
+
+    local variation = os.time()%3600
+
+    local variationReduced = 1+0.5*math.sin(variation/90)
+    local value = min + max * variationReduced / (1+(math.abs (c - offsetReduced/a))^(2*b))
+    local sin = 2 * (math.abs(math.sin(value) * (math.sin(value*c)))*1000)
+
+    -- local intvalue = math.floor(sin * 2+0.5) / 10^2
+    return math.floor(sin * 2+0.5) / 10^2
+end
+
 local log_level = none
 local threads = {}
 local threadCount = 0
@@ -8,7 +28,7 @@ local requestCount = {}
 local requestTypes = {}
 table.insert(requestTypes,{weight = 2, type = 'mainPage'})
 table.insert(requestTypes,{weight = 4, type = 'loginPage'})
-table.insert(requestTypes,{weight = 1, type = 'casAttacks'})
+table.insert(requestTypes,{weight = 1 * curvePattern(), type = 'casAttacks'})
 table.insert(requestTypes,{weight = 10, type = 'tradingPage'})
 
 local casAttacks = {}
@@ -112,13 +132,13 @@ function weightedSearch(obj)
         obj = weightedFilter(obj)
         local weights = 0
         for k,v in pairs(obj) do
-          weights = weights + v.weight
+          weights = weights + (v.weight*100)
         end
 
         local random = math.random(weights)
 
         for k,v in pairs(obj) do
-            random = random - v.weight
+            random = random - (v.weight*100)
             if random <= 0 then
                 return(v)
             end
