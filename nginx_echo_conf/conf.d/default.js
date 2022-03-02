@@ -44,7 +44,7 @@ function delayHandler(obj,json){
     }
 }
 
-function echo(r) {
+export default function echo(r) {
     var _headers = {};
     for (var h in r.headersIn) {
         _headers[h] = r.headersIn[h];
@@ -284,3 +284,5 @@ function echo(r) {
     _responseBody.response.timeStamp = r.variables.time_iso8601;
     delayHandler(r,_responseBody);
 }
+
+export default {echo}
