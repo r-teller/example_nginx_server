@@ -1,0 +1,1 @@
+Install steps for nginx and nginx-js can be found here --> http://nginx.org/en/linux_packages.html

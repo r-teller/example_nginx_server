@@ -90,6 +90,8 @@ function echo(r) {
     _responseBody.request.session.requestId = r.variables.request_id;
     _responseBody.request.session.connection = r.variables.connection;
     _responseBody.request.session.connectionNumber = r.variables.connection_requests;
+    _responseBody.request.session.connectionsActive = r.variables.connections_active;
+    _responseBody.request.session.connectionsWaiting = r.variables.connections_waiting;
 
     // Default response values
     _responseBody.response.statusCode = 200;
