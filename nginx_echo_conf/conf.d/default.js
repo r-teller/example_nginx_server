@@ -1,14 +1,3 @@
-var fs = require('fs');
-var responseB64 = JSON.parse(fs.readFileSync('/etc/nginx/conf.d/b64blobs.json'));
-
-function readStateHandler(file) {
-    try {
-        return JSON.parse(fs.readFileSync(file));
-    } catch (e) {
-        return {};
-    }
-}
-
 function weightedSearch(obj) {
     var weights = Object.values(obj).reduce(function (a, b) { return a + b; }, 0);
     var random = Math.floor(Math.random() * weights)
@@ -61,7 +50,9 @@ function echo(r) {
             ssl: {},
             session: {}
         },
-        environment: {},
+        environment: {
+            metaData: {}
+        },
         response: {
             addedDelay: {}
         }
@@ -76,6 +67,14 @@ function echo(r) {
     _responseBody.request.uri.body = r.requestBody != 'undefined' ? r.requestBody : undefined;
 
     _responseBody.environment.machineName = r.variables.hostname;
+
+    if (typeof (metadata) != 'undefined' && metadata.instance != undefined) {
+        _responseBody.environment.metaData.zone = metadata.instance.zone != undefined ? metadata.instance.zone.split("/").slice(-1)[0] : undefined;
+        _responseBody.environment.metaData.image = metadata.instance.image != undefined ? metadata.instance.image.split("/").slice(-1)[0] : undefined;
+        _responseBody.environment.metaData.region = metadata.instance.zone != undefined ? metadata.instance.zone.split("/").slice(-1)[0].slice(0, -2) : undefined;
+        _responseBody.environment.metaData.machineName = metadata.instance.name != undefined ? metadata.instance.name : undefined;
+        _responseBody.environment.metaData.machineType = metadata.instance.machineType != undefined ? metadata.instance.machineType.split("/").slice(-1)[0] : undefined;
+    }
 
     _responseBody.request.network.clientPort = r.variables.remote_port;
     _responseBody.request.network.clientAddress = r.variables.remote_addr;
@@ -110,7 +109,7 @@ function echo(r) {
                 "4k": 20,
                 "5k": 10
             };
-            var _responseB64 = responseB64["1kb-file"];
+            var _responseB64 = b64blobs["1kb-file"];
             _responseBody.response.bodySize = weightedSearch(_fileSizeWeight);
             switch (_responseBody.response.bodySize) {
                 case "1k":
@@ -138,7 +137,7 @@ function echo(r) {
                 "40k": 20,
                 "50k": 10
             };
-            var _responseB64 = responseB64["10kb-file"];
+            var _responseB64 = b64blobs["10kb-file"];
             _responseBody.response.bodySize = weightedSearch(_fileSizeWeight);
             switch (_responseBody.response.bodySize) {
                 case "10k":
