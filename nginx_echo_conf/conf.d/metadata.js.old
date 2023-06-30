@@ -1,0 +1,47 @@
+import exp from "constants";
+
+function gcp_header(r, data, flags) {
+    r.error("header_aaa")
+    r.headersOut["foo"] = "bar";
+    r.headersOut["Content-Length"] = "";
+}
+// function gcp_body(r, data, flags) {
+//     r.error("body_aaa");
+//     // let response = JSON.parse(r.subrequest("/_metadata-gcp").responseBody)
+//     let responseBody = JSON.parse(data)
+//     let response = {}
+//     if (r.status == 200) {
+//         r.error("body_bbb");
+//         response = {
+//             Hostname: responseBody.instance.name,
+//         }
+//         r.headersOut['x-metadata-hostname'] = responseBody.instance.name;
+//     } else {
+//         r.error("body_ccc");
+//         response = { status: r.status };
+//     }
+
+//     r.sendBuffer(JSON.stringify(response));
+//     // #Project_ID
+//     // #Region
+//     // #Hostname
+// }
+
+
+function gcp_body(r, data, flags) {
+    let responseBody = null;
+    r.on('upload', function (data, flags) {
+        if (!flags.last) {
+            responseBody += responseBody;
+        } else {
+            r.error(responseBody);
+            r.sendBuffer(responseBody,flags)
+        }
+    })
+
+
+}
+export default { gcp_body, gcp_header }
+
+
+

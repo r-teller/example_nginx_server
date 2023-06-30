@@ -15,7 +15,22 @@
                         },
                         "method": {
                             "type": "string",
-                            "enum": ["GET", "HEAD", "POST", "PUT", "DELETE", "MKCOL", "COPY", "MOVE", "OPTIONS", "PROPFIND", "PROPPATCH", "LOCK", "UNLOCK", "PATCH"]
+                            "enum": [
+                                "GET",
+                                "HEAD",
+                                "POST",
+                                "PUT",
+                                "DELETE",
+                                "MKCOL",
+                                "COPY",
+                                "MOVE",
+                                "OPTIONS",
+                                "PROPFIND",
+                                "PROPPATCH",
+                                "LOCK",
+                                "UNLOCK",
+                                "PATCH"
+                            ]
                         },
                         "scheme": {
                             "type": "string"
@@ -74,10 +89,17 @@
                         "isHttps": {
                             "type": "boolean"
                         },
-                        "sslProtocol":{
+                        "sslProtocol": {
                             "type": "string",
                             "optional": true,
-                            "enum": ["SSLv2","SSLv3","TLSv1","TLSv1.1","TLSv1.2","TLSv1.3"]
+                            "enum": [
+                                "SSLv2",
+                                "SSLv3",
+                                "TLSv1",
+                                "TLSv1.1",
+                                "TLSv1.2",
+                                "TLSv1.3"
+                            ]
                         },
                         "sslCipher": {
                             "type": "string",
@@ -100,13 +122,21 @@
                         },
                         "connectionNumber": {
                             "type": "string"
+                        },
+                        "connectionsActive": {
+                            "type": "string"
+                        },
+                        "connectionsWaiting": {
+                            "type": "string"
                         }
                     },
                     "additionalProperties": false,
                     "required": [
                         "requestId",
                         "connection",
-                        "connectionNumber"
+                        "connectionNumber",
+                        "connectionsActive",
+                        "connectionsWaiting"
                     ]
                 }
             },
@@ -118,16 +148,40 @@
                 "session"
             ]
         },
-        "environment":{
+        "environment": {
             "type": "object",
             "properties": {
-                "machineName": {
+                "metaData": {
+                    "type": "object",
+                    "properties": {
+                        "zone": {
+                            "type": "string"
+                        },
+                        "image": {
+                            "type": "string"
+                        },
+                        "region": {
+                            "type": "string"
+                        },
+                        "projectId": {
+                            "type": "string"
+                        },
+                        "machineName": {
+                            "type": "string"
+                        },
+                        "machineType": {
+                            "type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "hostname": {
                     "type": "string"
                 }
             },
             "additionalProperties": false,
             "required": [
-                "machineName"
+                "hostname"
             ]
         },
         "response": {
@@ -138,15 +192,18 @@
                     "properties": {
                         "status": {
                             "type": "string",
-                            "enum": ["ENABLED","DISABLED"]
+                            "enum": [
+                                "ENABLED",
+                                "DISABLED"
+                            ]
                         },
-                        "min":{
+                        "min": {
                             "type": "integer"
                         },
                         "max": {
                             "type": "integer"
                         },
-                        "actual":{
+                        "actual": {
                             "type": "integer"
                         },
                         "timeStamp": {
@@ -162,7 +219,9 @@
                     "type": "string"
                 },
                 "statusCode": {
-                    "type": "integer"
+                    "type": "integer",
+                    "minimum": 100,
+                    "maximum": 599
                 },
                 "statusReason": {
                     "type": "string"

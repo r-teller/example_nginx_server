@@ -1,0 +1,49 @@
+body {
+    margin-left: 20px;
+    font-family: "Roboto";
+    font-size: 0.8rem;
+
+}
+
+.table-bordered {
+    border: 1px solid #dee2e6;
+}
+
+.table {
+    margin-bottom: 1rem;
+    color: #212529;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+.table-sm td,
+.table-sm th {
+    padding: .3rem;
+}
+
+.table-bordered td,
+.table-bordered th {
+    border: 1px solid #dee2e6;
+}
+
+.table td,
+.table th {
+    vertical-align: top;
+}
+
+.font-weight-bold {
+    font-weight: 700 !important;
+}
+
+.bg-light {
+    background-color: #f8f9fa !important;
+}
+
+.text-center {
+    text-align: center !important;
+    max-width: 900px;
+    margin: auto;
+    padding: 10px;
+}
