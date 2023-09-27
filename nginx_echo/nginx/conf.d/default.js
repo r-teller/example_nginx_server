@@ -31,8 +31,13 @@ function delayHandler(obj, jsonData, type) {
                 switch (type) {
                     case "json":
                         obj.return(jsonData.response.statusCode, jsonString + '\n');
+                        break;
                     case "html":
                         obj.return(jsonData.response.statusCode, generateHTML(jsonString) + '\n');
+                        break;
+                    default:
+                        obj.return(jsonData.response.statusCode, jsonString + '\n');
+                        break;
                 }
             },
             timer
@@ -42,8 +47,13 @@ function delayHandler(obj, jsonData, type) {
         switch (type) {
             case "json":
                 obj.return(jsonData.response.statusCode, jsonString + '\n');
+                break;
             case "html":
                 obj.return(jsonData.response.statusCode, generateHTML(jsonString) + '\n');
+                break;
+            default:
+                obj.return(jsonData.response.statusCode, jsonString + '\n');
+                break;
         }
     }
 }
@@ -325,7 +335,6 @@ function echo(r) {
 function echoJSON(r) {
     let jsonData = echo(r);
     delayHandler(r, jsonData, "json");
-
 }
 
 function echoHTML(r) {
