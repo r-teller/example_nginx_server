@@ -157,7 +157,7 @@ function echo(r) {
                 "5k": 10
             };
             var _responseB64 = b64blobs["1kb-file"];
-            _responseBody.response.bodySize = weightedSearch(_fileSizeWeight);
+            _responseBody.response.bodySize = _fileSizeWeight.hasOwnProperty(r.args.fileSize) ? r.args.fileSize : weightedSearch(_fileSizeWeight);
             switch (_responseBody.response.bodySize) {
                 case "1k":
                     _responseBody.response.body = _responseB64;
@@ -185,7 +185,7 @@ function echo(r) {
                 "50k": 10
             };
             var _responseB64 = b64blobs["10kb-file"];
-            _responseBody.response.bodySize = weightedSearch(_fileSizeWeight);
+            _responseBody.response.bodySize = _fileSizeWeight.hasOwnProperty(r.args.fileSize) ? r.args.fileSize : weightedSearch(_fileSizeWeight);
             switch (_responseBody.response.bodySize) {
                 case "10k":
                     _responseBody.response.body = _responseB64;
@@ -266,7 +266,7 @@ function echo(r) {
 
     switch (true) {
         case (r.variables.server_port >= 5000 && r.variables.server_port < 6000):
-            // Captures requests recieved on TCP port 5000-5999
+            // Captures requests received on TCP port 5000-5999
             _responseBody.response.statusCode = 500;
             _responseBody.response.statusReason = 'UNHEALTHY_SERVER_PORT_RANGE';
             _responseBody.response.statusBody = 'UNHEALTHY';
