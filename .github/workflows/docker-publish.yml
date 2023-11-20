@@ -80,7 +80,7 @@ jobs:
 
       - name: Run the Docker Container
         run: |
-          docker run --name test-container -d ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          docker run --name test-container -d ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - name: Execute Tests
         run: |
