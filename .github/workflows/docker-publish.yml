@@ -54,6 +54,11 @@ jobs:
         uses: docker/metadata-action@v5.0.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
 
       # Build image with Buildx
       # https://github.com/docker/build-push-action
@@ -73,7 +78,7 @@ jobs:
       # https://docs.docker.com/build/ci/github-actions/test-before-push/
       - name: Run the Docker Container
         run: |
-          docker run --rm --name test-container -d ${{ steps.build-image.outputs.digest }}
+          docker run --rm --name test-container -d ${{ steps.meta.outputs.bake-file.args.DOCKER_META_IMAGES }}:${{ steps.meta.outputs.bake-file.args.DOCKER_META_IMAGES }}
 
       - name: Execute Tests
         run: |
