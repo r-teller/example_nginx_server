@@ -1,24 +1,11 @@
 name: Docker
 
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 on:
   release:
     types: [created]
-  # push:
-  #   branches: [ "main" ]
-  #   # Publish semver tags as releases.
-  #   tags: [ 'v*.*.*' ]
-  # pull_request:
-  #   branches: [ "main" ]
 
 env:
-  # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
-  # github.repository as <account>/<repo>
   IMAGE_NAME: r-teller/echo
 
 
@@ -43,14 +30,14 @@ jobs:
         with:
           cosign-release: 'v2.1.1' # optional
 
-      # Workaround: https://github.com/docker/build-push-action/issues/461
+      # Setup against a Docker registry
+      # https://github.com/docker/build-push-action
       - name: Setup Docker buildx
-        uses: docker/setup-buildx-action@79abd3f86f79a9d68a23c75a09a9a85889262adf
+        uses: docker/setup-buildx-action@v5.1.0
 
-      # Login against a Docker registry except on PR
-      # https://github.com/docker/login-action
+      # Login against a Docker registry
       - name: Log into registry ${{ env.REGISTRY }}
-        uses: docker/login-action@28218f9b04b4f3f62068d7b6ce6ca5b26e35336c
+        uses: docker/login-action@v3.0.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -60,27 +47,29 @@ jobs:
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
         id: meta
-        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        uses: docker/metadata-action@v5.0.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      # Build and push Docker image with Buildx (don't push on PR)
+      # Build image with Buildx
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
         id: build-and-push
-        uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
+        uses: docker/build-push-action@v5.1.0
         with:
           context: ./nginx_echo
           file: ./nginx_echo/Dockerfile
-          push: false
+          load: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      # Test container before pushing it
+      # https://docs.docker.com/build/ci/github-actions/test-before-push/
       - name: Run the Docker Container
         run: |
-          docker run --name test-container -d ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          docker run --name test-container -d ${{ steps.meta.outputs.tags }}
 
       - name: Execute Tests
         run: |
@@ -88,7 +77,7 @@ jobs:
 
       - name: Push Docker Image
         if: success() # Only push if tests succeed
-        uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
+        uses: docker/build-push-action@v5.1.0
         with:
           context: ./nginx_echo
           file: ./nginx_echo/Dockerfile
