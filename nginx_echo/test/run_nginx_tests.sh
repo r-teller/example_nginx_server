@@ -56,6 +56,4 @@ curl -ks http://localhost/ -X POST --data "TestingPOST" | jq .  > /tmp/test_sche
 curl -ks https://localhost --tlsv1.0 | jq .  > /tmp/test_schema_4_tlsv10.json
 
 ## Working through validation issues
-ajv test -s ./schema.json -d "/tmp/test_schema_*.json" --valid
-# ajv test -s /usr/local/bin/schema.json -d "/tmp/test_schema_*.json" --valid
-# cat /tmp/test_schema_1_base_http.json
+ajv test -s /usr/local/bin/schema.json -d "/tmp/test_schema_*.json" --valid
