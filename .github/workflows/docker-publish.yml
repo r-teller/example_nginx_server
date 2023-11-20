@@ -69,7 +69,7 @@ jobs:
           context: ./nginx_echo
           file: ./nginx_echo/Dockerfile
           load: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -78,7 +78,7 @@ jobs:
       # https://docs.docker.com/build/ci/github-actions/test-before-push/
       - name: Run the Docker Container
         run: |
-          docker run --rm --name test-container -d ${{ steps.meta.outputs.bake-file.args.DOCKER_META_IMAGES }}:${{ steps.meta.outputs.bake-file.args.DOCKER_META_IMAGES }}
+          docker run --rm --name test-container -d ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test
 
       - name: Execute Tests
         run: |
