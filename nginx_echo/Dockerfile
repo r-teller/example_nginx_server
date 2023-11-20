@@ -2,7 +2,9 @@ FROM nginx
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update
-RUN apt-get install curl wget vim nginx-module-njs jq -y
+RUN apt-get install curl wget vim nginx-module-njs jq -y 
+RUN apt-get install npm --no-install-recommends -y
+RUN npm install -g ajv-cli
 RUN apt-get clean
 
 RUN rm /etc/nginx/conf.d/default.conf

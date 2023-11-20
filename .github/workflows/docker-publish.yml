@@ -6,12 +6,14 @@ name: Docker
 # documentation.
 
 on:
-  push:
-    branches: [ "main" ]
-    # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
-  pull_request:
-    branches: [ "main" ]
+  release:
+    types: [created]
+  # push:
+  #   branches: [ "main" ]
+  #   # Publish semver tags as releases.
+  #   tags: [ 'v*.*.*' ]
+  # pull_request:
+  #   branches: [ "main" ]
 
 env:
   # Use docker.io for Docker Hub if empty
@@ -22,7 +24,6 @@ env:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -38,7 +39,6 @@ jobs:
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign
-        if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@v3.1.1
         with:
           cosign-release: 'v2.1.1' # optional
@@ -50,7 +50,6 @@ jobs:
       # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
       - name: Log into registry ${{ env.REGISTRY }}
-        if: github.event_name != 'pull_request'
         uses: docker/login-action@28218f9b04b4f3f62068d7b6ce6ca5b26e35336c
         with:
           registry: ${{ env.REGISTRY }}
@@ -73,12 +72,34 @@ jobs:
         with:
           context: ./nginx_echo
           file: ./nginx_echo/Dockerfile
-          push: ${{ github.event_name != 'pull_request' }}
+          push: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: Run the Docker Container
+        run: |
+          docker run --name test-container -d ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+      - name: Execute Tests
+        run: |
+          docker exec test-container /usr/local/bin/run_nginx_tests.sh 
+
+      - name: Push Docker Image
+        if: success() # Only push if tests succeed
+        uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
+        with:
+          context: ./nginx_echo
+          file: ./nginx_echo/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Cleanup
+        run: docker stop test-container && docker rm test-container
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
@@ -86,7 +107,6 @@ jobs:
       # transparency data even for private images, pass --force to cosign below.
       # https://github.com/sigstore/cosign
       - name: Sign the published Docker image
-        if: ${{ github.event_name != 'pull_request' }}
         # env:
           # DIGEST: ${{ steps.build-and-push.outputs.digest }}
           # TAGS: ${{ steps.docker_meta.outputs.tags }}

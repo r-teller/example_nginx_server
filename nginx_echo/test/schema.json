@@ -1,5 +1,4 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
     "properties": {
         "request": {
@@ -10,8 +9,7 @@
                     "properties": {
                         "headers": {
                             "type": "object",
-                            "additionalProperties": true,
-                            "optional": true
+                            "additionalProperties": true
                         },
                         "method": {
                             "type": "string",
@@ -43,12 +41,10 @@
                         },
                         "queryString": {
                             "type": "object",
-                            "additionalProperties": true,
-                            "optional": true
+                            "additionalProperties": true
                         },
                         "body": {
-                            "type": "string",
-                            "optional": true
+                            "type": "string"
                         }
                     },
                     "additionalProperties": false,
@@ -91,7 +87,6 @@
                         },
                         "sslProtocol": {
                             "type": "string",
-                            "optional": true,
                             "enum": [
                                 "SSLv2",
                                 "SSLv3",
@@ -102,8 +97,7 @@
                             ]
                         },
                         "sslCipher": {
-                            "type": "string",
-                            "optional": true
+                            "type": "string"
                         }
                     },
                     "additionalProperties": false,
@@ -154,26 +148,68 @@
                 "metaData": {
                     "type": "object",
                     "properties": {
-                        "zone": {
-                            "type": "string"
-                        },
-                        "image": {
-                            "type": "string"
-                        },
-                        "region": {
-                            "type": "string"
-                        },
-                        "projectId": {
-                            "type": "string"
-                        },
-                        "machineName": {
-                            "type": "string"
-                        },
-                        "machineType": {
-                            "type": "string"
+                        "cloudProvider": {
+                            "type": "string",
+                            "oneOf": [
+                                {
+                                    "type": "string",
+                                    "const": "gcp"
+                                },
+                                {
+                                    "type": "string",
+                                    "const": "unknown"
+                                }
+                            ]
                         }
                     },
-                    "additionalProperties": false
+                    "allOf": [
+                        {
+                            "if": {
+                                "properties": {
+                                    "cloudProvider": {
+                                        "type": "string",
+                                        "const": "gcp"
+                                    }
+                                },
+                                "required": [
+                                    "cloudProvider"
+                                ]
+                            },
+                            "then": {
+                                "properties": {
+                                    "zone": {
+                                        "type": "string"
+                                    },
+                                    "image": {
+                                        "type": "string"
+                                    },
+                                    "region": {
+                                        "type": "string"
+                                    },
+                                    "projectId": {
+                                        "type": "string"
+                                    },
+                                    "machineName": {
+                                        "type": "string"
+                                    },
+                                    "machineType": {
+                                        "type": "string"
+                                    }
+                                },
+                                "propertyNames": {
+                                    "enum": [
+                                        "cloudProvider",
+                                        "zone",
+                                        "image",
+                                        "region",
+                                        "projectId",
+                                        "machineName",
+                                        "machineType"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
                 },
                 "hostname": {
                     "type": "string"
@@ -221,27 +257,62 @@
                 "statusCode": {
                     "type": "integer",
                     "minimum": 100,
-                    "maximum": 599
+                    "maximum": 999
                 },
                 "statusReason": {
-                    "type": "string"
-                },
-                "statusBody": {
-                    "type": "string"
+                    "type": "string",
+                    "enum": [
+                        "DEFAULT",
+                        "RANDOM_SERVER_PORT_RANGE",
+                        "QUERY_PARAM_RANDOM_FAIL_RATE",
+                        "QUERY_PARAM_STATUS",
+                        "UNHEALTHY_SERVER_PORT_RANGE"
+                    ]
                 },
                 "timeStamp": {
                     "type": "string"
                 }
             },
-            "additionalProperties": false,
-            "required": [
-                "body",
-                "addedDelay",
-                "statusCode",
-                "statusReason",
-                "statusBody",
-                "timeStamp"
-            ]
+            "allOf": [
+                {
+                    "if": {
+                        "properties": {
+                            "statusCode": {
+                                "type": "integer",
+                                "minimum": 600
+                            }
+                        },
+                        "required": [
+                            "statusCode"
+                        ]
+                    },
+                    "then": {
+                        "properties": {
+                            "statusBody": {
+                                "type": "string",
+                                "pattern": "^UNKNOWN_QUERY_PARAM_STATUS - [0-9]{3}"
+                            }
+                        }
+                    },
+                    "else": {
+                        "properties": {
+                            "statusBody": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            ],
+            "propertyNames": {
+                "enum": [
+                    "body",
+                    "addedDelay",
+                    "statusBody",
+                    "statusCode",
+                    "statusReason",
+                    "timeStamp"
+                ]
+            }
         }
     },
     "additionalProperties": false,
