@@ -1,4 +1,4 @@
-function renterTable(jsonData) {
+function renderTable(jsonData) {
     function renderSubTable(data, level = 1) {
         var indent = ' '.repeat(level * 4);
         var table = '<table class="table table-bordered table-sm ml-4">';
