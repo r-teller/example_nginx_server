@@ -86,7 +86,7 @@ jobs:
           context: ./nginx_echo
           file: ./nginx_echo/Dockerfile
           push: true
-          tags: ${{ env.IMAGE_NAME }}:latest
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
