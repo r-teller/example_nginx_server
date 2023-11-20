@@ -130,7 +130,7 @@ function constructResponseBody(r) {
 }
 
 function constructVariables() {
-    _variables = undefined;
+    let _variables = undefined;
 
     if (metadata.environment != undefined) {
         _variables = metadata.environment;
@@ -141,7 +141,7 @@ function constructVariables() {
 
 function constructResponse(_args, r) {
     const _response = {
-        statusCode: parseInt(_args.status, 10) ?? 200,
+        statusCode: !isNaN(parseInt(_args.status, 10)) ? parseInt(_args.status, 10) : 200,
         statusReason: 'DEFAULT',
         statusBody: 'HEALTHY',
         addedDelay: {
@@ -213,9 +213,10 @@ function constructMetaData() {
             _metaData.serviceName = metadata.kubernetes.service != undefined ? metadata.kubernetes.service : undefined;
             _metaData.revision = metadata.kubernetes.revision != undefined ? metadata.kubernetes.revision : undefined;
         }
+        if (metadata.project != undefined) {
+            _metaData.projectId = metadata.project.projectId ?? undefined;
+        }
 
-
-        _metaData.projectId = metadata.project.projectId ?? undefined;
     }
     return _metaData;
 }

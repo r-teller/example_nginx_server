@@ -32,4 +32,4 @@ case $CLOUD_PROVIDER in
 esac
 
 ## Set Cloud Provider
-jq --arg cp "$CLOUD_PROVIDER" '. + {cloudProvider: $cp}' /tmp/metadata.json >/tmp/metadata.json
+cat <<<"$(jq --arg value "$CLOUD_PROVIDER" '.cloudProvider = $value' /tmp/metadata.json)" >/tmp/metadata.json
