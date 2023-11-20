@@ -64,7 +64,7 @@ jobs:
           context: ./nginx_echo
           file: ./nginx_echo/Dockerfile
           load: true
-          tags: ${{ steps.meta.outputs.tags[0] }}
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -73,7 +73,7 @@ jobs:
       # https://docs.docker.com/build/ci/github-actions/test-before-push/
       - name: Run the Docker Container
         run: |
-          docker run --rm --name test-container -d ${{ steps.meta.outputs.tags[0] }}
+          docker run --rm --name test-container -d ${{ steps.build-image.outputs.digest }}
 
       - name: Execute Tests
         run: |
