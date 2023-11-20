@@ -64,7 +64,7 @@ jobs:
           context: ./nginx_echo
           file: ./nginx_echo/Dockerfile
           load: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags[0] }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -73,13 +73,14 @@ jobs:
       # https://docs.docker.com/build/ci/github-actions/test-before-push/
       - name: Run the Docker Container
         run: |
-          docker run --rm --name test-container -d ${{ steps.meta.outputs.tags }}
+          docker run --rm --name test-container -d ${{ steps.meta.outputs.tags[0] }}
 
       - name: Execute Tests
         run: |
           docker exec test-container /usr/local/bin/run_nginx_tests.sh 
 
       - name: Push Docker Image
+        id: push-image
         if: success() # Only push if tests succeed
         uses: docker/build-push-action@v5.1.0
         with:
@@ -105,5 +106,5 @@ jobs:
           # TAGS: ${{ steps.docker_meta.outputs.tags }}
         # This step uses the identity token to provision an ephemeral certificate
         # against the sigstore community Fulcio instance.
-        run: echo "${{ steps.meta.outputs.tags }}" | xargs -I {} cosign sign --yes {}@${{ steps.build-and-push.outputs.digest }}
+        run: echo "${{ steps.meta.outputs.tags }}" | xargs -I {} cosign sign --yes {}@${{ steps.push-image.outputs.digest }}
         # run: cosign sign --yes "${TAGS}@${DIGEST}"
