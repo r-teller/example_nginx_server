@@ -195,13 +195,13 @@ function constructMetaData() {
 
     if (typeof (metadata) != 'undefined') {
         if (metadata.instance != undefined) {
-            _metaData.zone = metadata.instance.zone.split("/").slice(-1)[0] ?? undefined;
-            _metaData.image = metadata.instance.image.split("/").slice(-1)[0] ?? undefined;
-            _metaData.region = metadata.instance.zone.split("/").slice(-1)[0].slice(0, -2) ?? undefined;
+            _metaData.zone = metadata.instance.zone != undefined ? metadata.instance.zone.split("/").slice(-1)[0] : undefined;
+            _metaData.image = metadata.instance.image != undefined ? metadata.instance.image.split("/").slice(-1)[0] : undefined;
+            _metaData.region = metadata.instance.zone != undefined ? metadata.instance.zone.split("/").slice(-1)[0].slice(0, -2) : undefined;
             _metaData.tags = metadata.project.tags ?? undefined;
             _metaData.machineName = metadata.instance.name ?? undefined;
             _metaData.instanceId = metadata.instance.id ?? undefined;
-            _metaData.machineType = metadata.instance.machineType.split("/").slice(-1)[0] ?? undefined;
+            _metaData.machineType = metadata.instance.machineType != undefined ? metadata.instance.machineType.split("/").slice(-1)[0] : undefined;
 
             if (metadata.instance.attributes != undefined) {
                 _metaData.clusterName = metadata.instance.attributes['cluster-name'] ?? undefined;
@@ -210,9 +210,10 @@ function constructMetaData() {
         }
 
         if (metadata.kubernetes != undefined) {
-            _metaData.serviceName = metadata.kubernetes.service != undefined ? metadata.kubernetes.service : undefined;
-            _metaData.revision = metadata.kubernetes.revision != undefined ? metadata.kubernetes.revision : undefined;
+            _metaData.serviceName = metadata.kubernetes.service ?? undefined;
+            _metaData.revision = metadata.kubernetes.revision ?? undefined;
         }
+        
         if (metadata.project != undefined) {
             _metaData.projectId = metadata.project.projectId ?? undefined;
         }
