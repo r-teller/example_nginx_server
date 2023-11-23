@@ -95,7 +95,7 @@ function constructResponseBody(r) {
                 path: r.uri,
                 fullPath: r.variables.request_uri,
                 queryString: Object.keys(_args).length ? _args : undefined,
-                body: r.requestBody !== 'undefined' ? r.requestBody : undefined
+                body: r.requestText !== 'undefined' ? r.requestText : undefined
             },
             network: {
                 clientPort: r.variables.remote_port,
@@ -213,7 +213,7 @@ function constructMetaData() {
             _metaData.serviceName = metadata.kubernetes.service ?? undefined;
             _metaData.revision = metadata.kubernetes.revision ?? undefined;
         }
-        
+
         if (metadata.project != undefined) {
             _metaData.projectId = metadata.project.projectId ?? undefined;
         }
@@ -318,6 +318,7 @@ function handleResponseStatus(response, r, _args) {
 }
 
 function echoJSON(r) {
+    console.error(r.requestText);
     const _responseBody = constructResponseBody(r);
     delayResponse(r, _responseBody, "json");
 }
