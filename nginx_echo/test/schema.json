@@ -42,12 +42,31 @@
                         "queryString": {
                             "type": "object",
                             "additionalProperties": true
-                        },
-                        "body": {
-                            "type": "string"
                         }
                     },
-                    "additionalProperties": false,
+                    "allOf": [
+                        {
+                            "if": {
+                                "properties": {
+                                    "method": {
+                                        "type": "string",
+                                        "enum": [
+                                            "POST",
+                                            "PUT"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "method"
+                                ]
+                            },
+                            "then": {
+                                "required": [
+                                    "body"
+                                ]
+                            }
+                        }
+                    ],
                     "required": [
                         "method",
                         "scheme",
