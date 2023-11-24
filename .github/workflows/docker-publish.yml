@@ -91,6 +91,7 @@ jobs:
           file: ./nginx_echo/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
+          build-args: RELEASE_VERSION=test-version
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
