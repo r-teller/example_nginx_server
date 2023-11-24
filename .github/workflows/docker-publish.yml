@@ -67,7 +67,7 @@ jobs:
           file: ./nginx_echo/Dockerfile
           load: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test
-          build-args: RELEASE_VERSION=${{ steps.meta.outputs.tags }}
+          build-args: RELEASE_VERSION=test-version
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
