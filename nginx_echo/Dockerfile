@@ -1,6 +1,9 @@
 FROM nginx
 ENV DEBIAN_FRONTEND=noninteractive
 
+ARG RELEASE_VERSION
+ENV RELEASE_VERSION=$RELEASE_VERSION
+
 RUN apt-get update
 RUN apt-get install curl wget vim nginx-module-njs jq -y 
 RUN apt-get install npm --no-install-recommends -y
@@ -21,5 +24,3 @@ COPY ./test/schema.json /usr/local/bin
 COPY ./scripts/metadata.sh /docker-entrypoint.d/metadata.sh
 RUN chmod +x /docker-entrypoint.d/metadata.sh
 
-ARG RELEASE_VERSION
-ENV RELEASE_VERSION=$RELEASE_VERSION

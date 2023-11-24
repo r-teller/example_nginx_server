@@ -2,7 +2,7 @@ name: Docker-Image-Validate
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main-ignore" ]
 
 env:
   REGISTRY: ghcr.io
