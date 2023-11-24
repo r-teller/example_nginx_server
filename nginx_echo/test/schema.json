@@ -232,11 +232,23 @@
                 },
                 "hostname": {
                     "type": "string"
+                },
+                "releaseVersion": {
+                    "type": "string",
+                    "oneOf": [
+                        {
+                            "const": "unknown"
+                        },
+                        {
+                            "pattern":"^v[0-9]+\\.[0-9]+\\.[0-9]+$"
+                        }
+                    ]
                 }
             },
             "additionalProperties": false,
             "required": [
-                "hostname"
+                "hostname",
+                "releaseVersion"
             ]
         },
         "response": {
