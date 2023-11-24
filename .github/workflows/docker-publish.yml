@@ -99,7 +99,7 @@ jobs:
           context: ./nginx_echo
           file: ./nginx_echo/Dockerfile
           push: true
-          tags: ${{ RELEASE_TAGS }}
+          tags: ${{ env.RELEASE_TAGS }}
           build-args: RELEASE_VERSION=beta-version
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
