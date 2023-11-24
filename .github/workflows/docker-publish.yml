@@ -67,7 +67,7 @@ jobs:
           file: ./nginx_echo/Dockerfile
           load: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test
-          build-args: RELEASE_VERSION=test-version
+          build-args: RELEASE_VERSION=beta-version
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -82,6 +82,15 @@ jobs:
         run: |
           docker exec test-container /usr/local/bin/run_nginx_tests.sh 
 
+      - name: Set tag name
+        id: set_tag
+        run: |
+          if [ ${{ github.event.release.prerelease }} = true ]; then
+            echo "RELEASE_TAGS=latest-beta" >> $GITHUB_ENV
+          else
+            echo "RELEASE_TAGS=${{ steps.meta.outputs.tags }}" >> $GITHUB_ENV
+          fi
+
       - name: Push Docker Image
         id: push-image
         if: success() # Only push if tests succeed
@@ -90,8 +99,8 @@ jobs:
           context: ./nginx_echo
           file: ./nginx_echo/Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          build-args: RELEASE_VERSION=test-version
+          tags: ${{ RELEASE_TAGS }}
+          build-args: RELEASE_VERSION=beta-version
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
