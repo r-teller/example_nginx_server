@@ -1,8 +1,13 @@
-name: Docker
+name: Docker-Image-Validate
 
 on:
   push:
     branches: [ "main" ]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: r-teller/echo
+  RELEASE_VERSION: ${{ github.ref_name }}
 
 jobs:
   build:
