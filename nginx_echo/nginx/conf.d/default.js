@@ -121,6 +121,7 @@ function constructResponseBody(r) {
             metaData: constructMetaData(),
             variables: constructVariables(),
             hostname: r.variables.hostname,
+            releaseVersion: process.env.RELEASE_VERSION ?? "unknown"
         },
         response: constructResponse(_args, r)
     };

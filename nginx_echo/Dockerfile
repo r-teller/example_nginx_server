@@ -20,3 +20,6 @@ COPY ./test/schema.json /usr/local/bin
 
 COPY ./scripts/metadata.sh /docker-entrypoint.d/metadata.sh
 RUN chmod +x /docker-entrypoint.d/metadata.sh
+
+ARG RELEASE_VERSION
+ENV RELEASE_VERSION=$RELEASE_VERSION

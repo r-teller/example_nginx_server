@@ -2,16 +2,15 @@ name: Docker
 
 on:
   push:
-    branches: [ "main" ]
+    # branches: [ "main" ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
-  # release:
-  #   types: [created]
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: r-teller/echo
-
+  RELEASE_VERSION: ${{ github.ref_name }}
+  # RELEASE_VERSION: ${{ (github.event_name == 'release' && github.ref_name) || 'latest' }}
 
 jobs:
   build:
@@ -70,6 +69,7 @@ jobs:
           file: ./nginx_echo/Dockerfile
           load: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test
+          build-args: RELEASE_VERSION=${{ env.RELEASE_VERSION }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
