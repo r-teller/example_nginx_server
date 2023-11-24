@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Running test to verify nginx.conf syntax"
+echo "Running test to verify nginx.conf syntax for release ${RELEASE_VERSION}"
 nginx -t
 
 echo "Installing JSON syntax validator"

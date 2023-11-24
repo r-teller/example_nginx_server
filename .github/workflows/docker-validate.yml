@@ -1,14 +1,8 @@
-name: Docker-Publish
+name: Docker
 
 on:
   push:
-    # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
-
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: r-teller/echo
-  RELEASE_VERSION: ${{ github.ref_name }}
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -67,7 +61,7 @@ jobs:
           file: ./nginx_echo/Dockerfile
           load: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test
-          build-args: RELEASE_VERSION=${{ steps.meta.outputs.tags }}
+          build-args: RELEASE_VERSION=${{ env.RELEASE_VERSION }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -82,32 +76,5 @@ jobs:
         run: |
           docker exec test-container /usr/local/bin/run_nginx_tests.sh 
 
-      - name: Push Docker Image
-        id: push-image
-        if: success() # Only push if tests succeed
-        uses: docker/build-push-action@v5.1.0
-        with:
-          context: ./nginx_echo
-          file: ./nginx_echo/Dockerfile
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
       - name: Cleanup
         run: docker stop test-container
-
-      # Sign the resulting Docker image digest except on PRs.
-      # This will only write to the public Rekor transparency log when the Docker
-      # repository is public to avoid leaking data.  If you would like to publish
-      # transparency data even for private images, pass --force to cosign below.
-      # https://github.com/sigstore/cosign
-      - name: Sign the published Docker image
-        # env:
-          # DIGEST: ${{ steps.build-and-push.outputs.digest }}
-          # TAGS: ${{ steps.docker_meta.outputs.tags }}
-        # This step uses the identity token to provision an ephemeral certificate
-        # against the sigstore community Fulcio instance.
-        run: echo "${{ steps.meta.outputs.tags }}" | xargs -I {} cosign sign --yes {}@${{ steps.push-image.outputs.digest }}
-        # run: cosign sign --yes "${TAGS}@${DIGEST}"
