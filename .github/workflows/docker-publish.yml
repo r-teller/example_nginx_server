@@ -7,7 +7,8 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: r-teller/echo
+  GHCR_IMAGE_NAME: r-teller/echo
+  DOCKER_IMAGE_NAME: rteller/echo
   RELEASE_VERSION: ${{ github.ref_name }}
 
 jobs:
@@ -58,8 +59,8 @@ jobs:
         uses: docker/metadata-action@v5.0.0
         with:
           images: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-            ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}
+            ${{ env.REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}
+            ${{ env.DOCKER_IMAGE_NAME }}
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -75,7 +76,7 @@ jobs:
           context: ./nginx_echo
           file: ./nginx_echo/Dockerfile
           load: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test
+          tags: ${{ env.REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:test
           build-args: RELEASE_VERSION=${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
@@ -85,7 +86,7 @@ jobs:
       # https://docs.docker.com/build/ci/github-actions/test-before-push/
       - name: Run the Docker Container
         run: |
-          docker run --rm --name test-container -d ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test
+          docker run --rm --name test-container -d ${{ env.REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:test
 
       - name: Execute Tests
         run: |
