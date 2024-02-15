@@ -81,6 +81,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          platforms: linux/amd64,linux/arm64
 
       # Test container before pushing it
       # https://docs.docker.com/build/ci/github-actions/test-before-push/

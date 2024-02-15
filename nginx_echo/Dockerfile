@@ -1,4 +1,4 @@
-FROM nginx
+FROM --platform=$TARGETPLATFORM  nginx
 ENV DEBIAN_FRONTEND=noninteractive
 
 ARG RELEASE_VERSION
