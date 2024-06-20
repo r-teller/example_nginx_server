@@ -20,7 +20,9 @@ jobs:
       # This is used to complete the identity challenge
       # with sigstore/fulcio when running outside of PRs.
       id-token: write
-
+    strategy:
+      matrix:
+        platform: [linux/amd64, linux/arm64]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -76,13 +78,13 @@ jobs:
         with:
           context: ./nginx_echo
           file: ./nginx_echo/Dockerfile
-          # load: true
+          load: true  
           tags: ${{ env.REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:test
           build-args: RELEASE_VERSION=${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          platforms: linux/amd64,linux/arm64
+          platforms: ${{ matrix.platform }}
 
       # Test container before pushing it
       # https://docs.docker.com/build/ci/github-actions/test-before-push/
@@ -107,8 +109,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          platforms: linux/amd64,linux/arm64
-          
+          platforms: ${{ matrix.platform }}
+
       - name: Cleanup
         run: docker stop test-container
 
