@@ -73,6 +73,7 @@ jobs:
             type=ref,event=pr
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=linux-${{ matrix.platform }}
 
       # Build image with Buildx
       # https://github.com/docker/build-push-action
@@ -93,16 +94,19 @@ jobs:
       # Test container before pushing it
       # https://docs.docker.com/build/ci/github-actions/test-before-push/
       - name: Run the Docker Container
+        if: matrix.platform == 'linux/amd64'
         run: |
           docker run --rm --name test-container -d ${{ env.REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:test
 
       - name: Execute Tests
+        if: matrix.platform == 'linux/amd64'
         run: |
           docker exec test-container /usr/local/bin/run_nginx_tests.sh 
 
       - name: Push Docker Image
         id: push-image
-        if: success() # Only push if tests succeed
+        # if: success() # Only push if tests succeed
+        if: matrix.platform == 'linux/amd64' && success() || matrix.platform == 'linux/arm64'
         uses: docker/build-push-action@v5.1.0
         with:
           context: ./nginx_echo
@@ -116,6 +120,7 @@ jobs:
           platforms: ${{ matrix.platform }}
 
       - name: Cleanup
+        if: matrix.platform == 'linux/amd64'
         run: docker stop test-container
 
       # Sign the resulting Docker image digest except on PRs.
