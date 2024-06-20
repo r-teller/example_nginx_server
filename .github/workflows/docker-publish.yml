@@ -76,7 +76,7 @@ jobs:
         with:
           context: ./nginx_echo
           file: ./nginx_echo/Dockerfile
-          load: true
+          # load: true
           tags: ${{ env.REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:test
           build-args: RELEASE_VERSION=${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
