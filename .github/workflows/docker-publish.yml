@@ -156,5 +156,5 @@ jobs:
         run: |
           docker buildx imagetools create --tag ${{ env.REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:${{ github.ref_name }} \
             --tag ${{ env.REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:latest \
-            ${{ env.REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:linux-amd64-${{ github.sha }} \
-            ${{ env.REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:linux-arm64-${{ github.sha }}
+            ${{ env.REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:${{ github.sha }}-linux-amd64 \
+            ${{ env.REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:${{ github.sha }}-linux-arm64
