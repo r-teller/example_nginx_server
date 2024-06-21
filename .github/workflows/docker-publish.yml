@@ -174,5 +174,6 @@ jobs:
             --tag ${{ env.REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:latest \
             ${{ env.REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:${{ github.sha }}-linux-amd64 \
             ${{ env.REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:${{ github.sha }}-linux-arm64 \
+            --tag ${{env.DOCKER_IMAGE_NAME}}:latest \ 
             ${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}-linux-amd64 \
             ${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}-linux-arm64
