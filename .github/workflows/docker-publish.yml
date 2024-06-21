@@ -22,7 +22,11 @@ jobs:
       id-token: write
     strategy:
       matrix:
-        platform: [linux/amd64, linux/arm64]
+        include:
+          - platform: linux/amd64
+            platform_safe: linux-amd64
+          - platform: linux/arm64
+            platform_safe: linux-arm64
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -114,7 +118,7 @@ jobs:
           push: true
           tags: |
             ${{ steps.meta.outputs.tags }}
-            ${{ env.REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:${{ github.sha }}-${{ matrix.platform }}
+            ${{ env.REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:${{ github.sha }}-${{ matrix.platform_safe }}
           build-args: RELEASE_VERSION=${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
