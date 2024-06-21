@@ -112,7 +112,9 @@ jobs:
           context: ./nginx_echo
           file: ./nginx_echo/Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: |
+            ${{ steps.meta.outputs.tags }}
+            ${{ env.REGISTRY }}/${{ env.GHCR_IMAGE_NAME }}:${{ github.sha }}-${{ matrix.platform }}
           build-args: RELEASE_VERSION=${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
